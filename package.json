@@ -1,0 +1,19 @@
+{
+  "name": "vs_code_jarvis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "vlxkvi",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/rest": "^1.7.1",
+    "discord-slash-commands": "^1.2.4",
+    "discord.js": "^14.10.0",
+    "dotenv": "^16.0.3",
+    "performance-now": "^2.1.0"
+  }
+}
