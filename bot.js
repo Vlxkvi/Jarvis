@@ -19,7 +19,7 @@ client.on('ready as hell', () => {
 })
 
 client.on('messageCreate', message => {
-    if (message.channel.id == '1103310828104597534') {
+    if (message.channel.id == '983658070385250364') {
       checkRolesList();
     };  
 })
@@ -27,11 +27,11 @@ client.on('messageCreate', message => {
 client.on('interactionCreate', async(interaction) => {
     if (!interaction.isChatInputCommand()) return;
 
-    const guild = client.guilds.cache.get(process.env.guild_id);
+    let guild = client.guilds.cache.get(process.env.guild_id);
     const commandsPath = './commands'
     
-    if (interaction.commandName === 'test') {
-      const checkCommand = require(commandsPath + '/test.js');
+    if (interaction.commandName === 'ping') {
+      const checkCommand = require(commandsPath + '/ping.js');
       checkCommand.execute(interaction, client, guild);
     }
     
@@ -43,7 +43,7 @@ client.on('interactionCreate', async(interaction) => {
     
     if (interaction.commandName === 'list') {
       const checkCommand = require(commandsPath + '/list.js');
-      checkCommand.execute(interaction, client, guild);
+      checkCommand.execute(interaction, client)
       logCommandExecution(interaction.commandName, interaction.user, 'Successfully');
     }
     
@@ -63,6 +63,23 @@ client.on('interactionCreate', async(interaction) => {
       const checkCommand = require(commandsPath + '/temproleslist.js');
       checkCommand.execute(interaction, client, guild);
       logCommandExecution(interaction.commandName, interaction.user, 'Successfully');
+    }
+    
+    if (interaction.commandName === 'event') {
+      const checkCommand = require(commandsPath + '/event.js');
+      checkCommand.execute(interaction, client, guild);
+      logCommandExecution(interaction.commandName, interaction.user, 'Successfully');
+    }
+    
+    if (interaction.commandName === 'eventlist') {
+      const checkCommand = require(commandsPath + '/eventlist.js');
+      checkCommand.execute(interaction, client, guild);
+      logCommandExecution(interaction.commandName, interaction.user, 'Successfully');
+    }
+    
+    if (interaction.commandName === 'editmessage') {
+      const checkCommand = require(commandsPath + '/editmessage.js');
+      checkCommand.execute(interaction, client)
     }
 })
 
@@ -90,8 +107,8 @@ async function checkRolesList() {
       const entryTime = parseInt(key); 
       const timeDifference = currentTime - entryTime;
 
-      // Time to keep role
-      const keepingTime = 1*60;
+      // Time to keep role - 3 days
+      const keepingTime = 720*60*60; 
 
       if (timeDifference > keepingTime) {
         console.log(`Вийшов ${key} зараз ${currentTime}, пройшло ${currentTime - entryTime}`);
@@ -147,8 +164,6 @@ async function checkRolesList() {
         } catch (err) {
           console.error('Error writing to roleslist.json:', err);
         }
-      } else {
-        console.log(`Ще не ${key}, зараз ${currentTime}, пройшло ${currentTime - entryTime}`);
       }
     });
   } catch (error) {

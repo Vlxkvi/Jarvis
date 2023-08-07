@@ -4,17 +4,6 @@ const { Routes, ApplicationCommandOptionType } = require ('discord.js');
 
 const commands = [
     {
-        name: 'test',
-        description: 'тестик',
-        options: [
-            {
-                name: 'user',
-                description: 'абчмонька',
-                type: ApplicationCommandOptionType.User
-            }
-        ]
-    },
-    {
         name: 'check',
         description: 'Проверяет роли за ивенты',
         options: [
@@ -85,10 +74,6 @@ const commands = [
         ]
     },
     {
-        name: 'temproleslist',
-        description: 'list of current added temporary roles'
-    },
-    {
         name: 'event',
         description: 'Registration for the event',
         options: [
@@ -115,14 +100,32 @@ const commands = [
     {
         name: 'eventlist',
         description: 'Проверяет роли за ивенты',
+    },
+    {
+        name: 'temproleslist',
+        description: 'list of current added temporary roles'
+    },
+    {
+        name: 'ping',
+        description: 'tells how much time took to respond'
+    },
+    {
+        name: 'editmessage',
+        description: 'tells how much time took to respond',
         options: [
             {
-                name: 'user1',
-                description: 'пoльзoвaтeль1, роли которого нужно проверить',
-                type: ApplicationCommandOptionType.User,
+                name: 'link',
+                description: 'message link',
+                type: ApplicationCommandOptionType.String,
+                required: true,
+            },
+            {
+                name: 'newmessage',
+                description: 'new message',
+                type: ApplicationCommandOptionType.String,
                 required: true,
             }
-        ]
+        ],
     }
 ];
 

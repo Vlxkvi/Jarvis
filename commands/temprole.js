@@ -14,11 +14,11 @@ module.exports = {
       const userOption5 = interaction.options.getUser('user5');
 
       // Creating variables of options
-      const user1 = guild.members.cache.get(userOption1.id);
-      const user2 = userOption2 ? guild.members.cache.get(userOption2.id) : null;
-      const user3 = userOption3 ? guild.members.cache.get(userOption3.id) : null;
-      const user4 = userOption4 ? guild.members.cache.get(userOption4.id) : null;
-      const user5 = userOption5 ? guild.members.cache.get(userOption5.id) : null; 
+      const user1 = interaction.guild.members.cache.get(userOption1.id);
+      const user2 = userOption2 ? interaction.guild.members.cache.get(userOption2.id) : null;
+      const user3 = userOption3 ? interaction.guild.members.cache.get(userOption3.id) : null;
+      const user4 = userOption4 ? interaction.guild.members.cache.get(userOption4.id) : null;
+      const user5 = userOption5 ? interaction.guild.members.cache.get(userOption5.id) : null; 
 
       let RolesList = [];
 
