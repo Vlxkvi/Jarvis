@@ -1,62 +1,36 @@
-const { EmbedBuilder } = require("discord.js")
-const fs = require('fs');
-require("dotenv/config")
+const { EmbedBuilder } = require("discord.js");
+require("dotenv/config");
 
 module.exports = {
   async execute(interaction, client, guild) {
-
-    const usingTime = Math.floor(Date.now() / 1000)
-
-    // Припустимо, у вас є словник (об'єкт)
-    const RolesList = {
-      apple: 'яблуко23',
-      orange: 'апельсин23',
-      banana: 'банан23',
-      cherry: 'вишня23',
-    };
-
-    RolesList.push({
-      key: usingTime
-      
-    })
-
-    // Конвертуємо словник в рядок JSON
-    const jsonData = JSON.stringify(RolesList, null, 2);
-
-    // Записуємо рядок JSON у файл з назвою "dictionary.json"
-    fs.writeFileSync('roleslist.json', jsonData);
-    output = 'Словник був занесений в roleslist.json'
-
-    console.log(output);
-
-
-
-    fs.readFile('roleslist.json', 'utf8', (err, data) => {
-      if (err) {
-        console.error('Помилка при читанні файлу:', err);
-        return;
-      }
-    
-      try {
-        // Парсимо (розпізнаємо) JSON рядок у JavaScript об'єкт
-        const RolesList2 = JSON.parse(data);
-    
-        // Ви можете використовувати `RolesList` так, як ви бажаєте
-        console.log('Зміст JSON файлу:');
-        console.log(RolesList2);
-      } catch (error) {
-        console.error('Помилка при парсінгу JSON:', error);
-      }
-    });
-
-    output = output + `<t:${usingTime}:f>`
-
-    const roleEmbed = new EmbedBuilder()
+    const loadingEmbed = new EmbedBuilder()
       .setColor(0x9caef2)
-      .setDescription(output)
+      .setDescription('I\'m working on it, it may take a few seconds...')
       .setTimestamp()
       .setFooter({ text: 'Jar𝕧is' });
+    const loadingMessage = await interaction.reply({ embeds: [loadingEmbed], fetchReply: true });
 
-    interaction.reply({ embeds: [roleEmbed] });
-    },
-  };
+    const userOption = interaction.options.getUser('user');
+    const member = interaction.guild.members.cache.get(userOption.id);
+    const roles = ['841224405873852418', '839921943997186059', '886512881464639539', '839921953111670784', '841692259970711584', '971450698539618354', '860929131347705887', '884091649674846238', '971450704197722192', '839921953896792105'];
+
+    try {
+      // Removing roles from the member
+      await Promise.all(roles.map(roleId => member.roles.add(roleId)));
+
+      // Creating the output message
+      const outputStatus = `<@${member.id}> roles have been added successfully.`;
+
+      const EventEmbed = new EmbedBuilder()
+        .setColor(0x9caef2)
+        .setDescription(outputStatus)
+        .setTimestamp()
+        .setFooter({ text: member.id });
+
+      await interaction.editReply({ embeds: [EventEmbed] });
+    } catch (error) {
+      console.error(error);
+      interaction.reply({ content: 'An error occurred while removing roles.', ephemeral: true });
+    }
+  },
+};

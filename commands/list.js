@@ -6,7 +6,7 @@ module.exports = {
     try {
       const loadingEmbed = new EmbedBuilder()
         .setColor(0x9caef2)
-        .setDescription('I\'m working on it, it may take few seconds...')
+        .setDescription('I\'m working on it, it may take a few seconds...')
         .setTimestamp()
         .setFooter({ text: 'Jar𝕧is' });
 

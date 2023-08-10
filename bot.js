@@ -81,6 +81,16 @@ client.on('interactionCreate', async(interaction) => {
       const checkCommand = require(commandsPath + '/editmessage.js');
       checkCommand.execute(interaction, client)
     }
+
+    if (interaction.commandName === 'news') {
+      const checkCommand = require(commandsPath + '/news.js');
+      checkCommand.execute(interaction, client)
+    }
+
+    if (interaction.commandName === 'test') {
+      const checkCommand = require(commandsPath + '/test.js');
+      checkCommand.execute(interaction, client)
+    }
 })
 
 async function logCommandExecution(commandName, user, resultText) {

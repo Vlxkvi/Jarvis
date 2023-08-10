@@ -4,6 +4,18 @@ const { Routes, ApplicationCommandOptionType } = require ('discord.js');
 
 const commands = [
     {
+        name: 'test',
+        description: 'test',
+        options: [
+            {
+                name: 'user',
+                description: 'user',
+                type: ApplicationCommandOptionType.User,
+                required: false,
+            }
+        ]
+    },
+    {
         name: 'check',
         description: 'Проверяет роли за ивенты',
         options: [
@@ -122,6 +134,18 @@ const commands = [
             {
                 name: 'newmessage',
                 description: 'new message',
+                type: ApplicationCommandOptionType.String,
+                required: true,
+            }
+        ],
+    },
+    {
+        name: 'news',
+        description: 'remakes news message',
+        options: [
+            {
+                name: 'messageid',
+                description: 'id of the message which contains original news',
                 type: ApplicationCommandOptionType.String,
                 required: true,
             }

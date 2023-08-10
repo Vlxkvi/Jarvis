@@ -5,6 +5,7 @@ require("dotenv/config");
 module.exports = {
   async execute(interaction, client, guild) {
     let RolesList = [];
+    let output = '';
 
     try {
       // Reading roleslist.json
@@ -17,7 +18,6 @@ module.exports = {
       
     if(Object.keys(RolesList).length === 0) {output = `No roles are given at this time`}
     else{
-      let output = '';
 
       RolesList.forEach((entry) => {
         const key = Object.keys(entry)[0]; // Отримуємо ключ з запису JSON
