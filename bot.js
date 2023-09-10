@@ -1,5 +1,9 @@
 const { Client, GatewayIntentBits, EmbedBuilder, MessageEmbed, WebhookClient } = require("discord.js")
 const fs = require('fs').promises;
+const { logCommandExecution } = require('./functions/logger.js');
+const { autoNews } = require('./functions/autoNews.js')
+
+
 require("dotenv/config")
 
 const prefix = "j.";
@@ -13,7 +17,6 @@ const client = new Client({
         GatewayIntentBits.GuildPresences
     ],
 })
-
 client.on('ready as hell', () => {
     console.log('The bot is ready.')
 })
@@ -22,6 +25,11 @@ client.on('messageCreate', message => {
     if (message.channel.id == '983658070385250364') {
       checkRolesList();
     };  
+    if(message.channel.id == '1103310828104597534' && message.content.trim() != '' && message.content.startsWith('Hey')){
+      const consoleChannel = client.channels.fetch('729263612874588160');
+      //consoleChannel.send('Есть контакт')
+      autoNews(message.content, client)
+    }
 })
 
 client.on('interactionCreate', async(interaction) => {
@@ -38,43 +46,43 @@ client.on('interactionCreate', async(interaction) => {
     if (interaction.commandName === 'check') {
       const checkCommand = require(commandsPath + '/check.js');
       checkCommand.execute(interaction, client, guild);
-      logCommandExecution(interaction.commandName, interaction.user, 'Succesfully')
+      logCommandExecution(client, interaction.commandName, interaction.user, 'Succesfully')
     }
     
     if (interaction.commandName === 'list') {
       const checkCommand = require(commandsPath + '/list.js');
       checkCommand.execute(interaction, client)
-      logCommandExecution(interaction.commandName, interaction.user, 'Successfully');
+      logCommandExecution(client, interaction.commandName, interaction.user, 'Successfully');
     }
     
     if (interaction.commandName === 'up-champ') {
       const checkCommand = require(commandsPath + '/up-champ.js');
       checkCommand.execute(interaction, client, guild);
-      logCommandExecution(interaction.commandName, interaction.user, 'Successfully');
+      logCommandExecution(client, interaction.commandName, interaction.user, 'Successfully');
     }
 
     if (interaction.commandName === 'temprole'){
       const checkCommand = require(commandsPath + '/temprole.js');
       checkCommand.execute(interaction, client, guild);
-      logCommandExecution(interaction.commandName, interaction.user, 'Successfully');
+      logCommandExecution(client, interaction.commandName, interaction.user, 'Successfully');
     }
 
     if (interaction.commandName === 'temproleslist'){
       const checkCommand = require(commandsPath + '/temproleslist.js');
       checkCommand.execute(interaction, client, guild);
-      logCommandExecution(interaction.commandName, interaction.user, 'Successfully');
+      logCommandExecution(client, interaction.commandName, interaction.user, 'Successfully');
     }
     
     if (interaction.commandName === 'event') {
       const checkCommand = require(commandsPath + '/event.js');
       checkCommand.execute(interaction, client, guild);
-      logCommandExecution(interaction.commandName, interaction.user, 'Successfully');
+      logCommandExecution(client, interaction.commandName, interaction.user, 'Successfully');
     }
     
     if (interaction.commandName === 'eventlist') {
       const checkCommand = require(commandsPath + '/eventlist.js');
       checkCommand.execute(interaction, client, guild);
-      logCommandExecution(interaction.commandName, interaction.user, 'Successfully');
+      logCommandExecution(client, interaction.commandName, interaction.user, 'Successfully');
     }
     
     if (interaction.commandName === 'editmessage') {
@@ -93,16 +101,6 @@ client.on('interactionCreate', async(interaction) => {
     }
 })
 
-async function logCommandExecution(commandName, user, resultText) {
-  const logChannel = await client.channels.fetch('1128424838692880464');
-
-  const commandEmbed = new EmbedBuilder()
-    .setColor(0x9caef2)
-    .setDescription(`<@${user.id}> used **${commandName}** command. ` + resultText)
-    .setTimestamp()
-
-  await logChannel.send({ embeds: [commandEmbed] });
-}
 
 async function checkRolesList() {
   try {

@@ -6,6 +6,14 @@ module.exports = {
   async execute(interaction, client, guild) {
     const usingTime = Math.floor(Date.now() / 1000);
     try {
+      const loadingEmbed = new EmbedBuilder()
+        .setColor(0x9caef2)
+        .setDescription('Assigning roles, it\'l take few seconds')
+        .setTimestamp()
+        .setFooter({ text: 'Jar𝕧is' });
+
+      await interaction.reply({ embeds: [loadingEmbed], fetchReply: true });
+
       const roleOption = interaction.options.getRole('role');
       const userOption1 = interaction.options.getUser('user1');
       const userOption2 = interaction.options.getUser('user2');
@@ -76,7 +84,7 @@ module.exports = {
       .setColor(0x45f03e)
       .setDescription(output);
 
-      interaction.reply({ embeds: [roleEmbed] });
+      interaction.editReply({ embeds: [roleEmbed] });
       
     } catch (error) {
       console.log(error.message);
