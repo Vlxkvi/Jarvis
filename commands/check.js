@@ -2,7 +2,16 @@ const { EmbedBuilder } = require("discord.js")
 require("dotenv/config")
 
 module.exports = {
-    async execute(interaction, client, guild) {
+      async execute(interaction, client, guild) {
+      try{
+        const loadingEmbed = new EmbedBuilder()
+          .setColor(0x9caef2)
+          .setDescription('Loading, it will take few seconds')
+          .setTimestamp()
+          .setFooter({ text: 'Jar𝕧is' });
+
+        await interaction.reply({ embeds: [loadingEmbed], fetchReply: true });
+
         const userOption1 = interaction.options.getUser('user1');
         const member = interaction.guild.members.cache.get(userOption1.id);
         const champions = ['1097200827485130792', '1097200822196109534', '1097200811295121418', '1097200228156846090', '971450716222795907', '839921732232151110']
@@ -36,7 +45,10 @@ module.exports = {
         .setTimestamp()
         .setFooter({text: member.id});
 
-        interaction.reply({embeds: [EventEmbed]})
-        
+        interaction.editReply({embeds: [EventEmbed]})
+      }
+      catch(error){
+        interaction.editReply(`<@163547278882111488>\n${error.message}`)
+      }
     },
   };

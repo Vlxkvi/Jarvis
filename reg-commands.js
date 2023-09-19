@@ -150,6 +150,18 @@ const commands = [
                 required: true,
             }
         ],
+    },
+    {
+        name: 'say',
+        description: 'says the message u typed',
+        options: [
+            {
+                name: 'message',
+                description: 'message that bot will send',
+                type: ApplicationCommandOptionType.String,
+                required: true,
+            }
+        ],
     }
 ];
 

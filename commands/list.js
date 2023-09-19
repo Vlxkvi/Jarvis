@@ -38,7 +38,7 @@ module.exports = {
       await interaction.editReply({ embeds: [roleEmbed] });
     } catch (error) {
       console.error('Error executing list command:', error);
-      await interaction.editReply('Sorry, there was an error while processing the command.');
+      await interaction.editReply(`<@163547278882111488>\n${error.message}`);
     }
   },
 };

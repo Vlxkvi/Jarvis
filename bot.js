@@ -99,6 +99,12 @@ client.on('interactionCreate', async(interaction) => {
       const checkCommand = require(commandsPath + '/test.js');
       checkCommand.execute(interaction, client)
     }
+
+    if (interaction.commandName === 'say') {
+      const checkCommand = require(commandsPath + '/say.js');
+      checkCommand.execute(interaction, client, guild);
+    }
+    
 })
 
 

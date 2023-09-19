@@ -9,7 +9,7 @@ module.exports = {
         .setDescription('I\'m working on it, it may take a few seconds...')
         .setTimestamp()
         .setFooter({ text: 'Jar𝕧is' });
-      const loadingMessage = await interaction.reply({ embeds: [loadingEmbed], fetchReply: true });
+      await interaction.reply({ embeds: [loadingEmbed], fetchReply: true });
 
       const userOption1 = interaction.options.getUser('user');
       const member = interaction.guild.members.cache.get(userOption1.id);

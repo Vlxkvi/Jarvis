@@ -6,6 +6,15 @@ require("dotenv/config");
 module.exports = {
 	async execute(interaction) {
 		try {
+		
+			const loadingEmbed = new EmbedBuilder()
+			.setColor(0x9caef2)
+			.setDescription('Assigning roles, it\'ll take few seconds')
+			.setTimestamp()
+			.setFooter({ text: 'Jar𝕧is' });
+	
+		  	await interaction.reply({ embeds: [loadingEmbed], fetchReply: true });
+			
 			//Директория папки и проверка её существованивания
 			const folderPath = path.join(__dirname, '../1Storage');
 			if (!fs.existsSync(folderPath)) return interaction.reply({
@@ -54,11 +63,11 @@ module.exports = {
 				})
 				.setTimestamp();
 
-			await interaction.reply({embeds: [embed], ephemeral: false})
+			await interaction.editReply({embeds: [embed], ephemeral: false})
 
 		} catch (error) {
 			console.log(error);
-			//await interaction.reply({content: error.message, ephemeral: true});
+			await interaction.editReply(`<@163547278882111488>\n${error.message}`);
 		}
 	}
 }

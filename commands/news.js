@@ -233,7 +233,7 @@ module.exports = {
     
     } catch (error) {
       console.error(error);
-      interaction.reply({ content: `Seems you're trying to load message which is not from <#795155910153469952> or we have some other error. Anyway tell that to <@163547278882111488> if you have this problem few times`, ephemeral: true });
+      interaction.reply({ content: `Seems you're trying to load message which is not from <#795155910153469952> or we have some other error. Anyway tell that to <@163547278882111488> if you have this problem few times\n\nError:\n${error.message}`, ephemeral: true });
       }
   },
 };

@@ -8,7 +8,7 @@ module.exports = {
     try {
       const loadingEmbed = new EmbedBuilder()
         .setColor(0x9caef2)
-        .setDescription('Assigning roles, it\'l take few seconds')
+        .setDescription('Assigning roles, it\'ll take few seconds')
         .setTimestamp()
         .setFooter({ text: 'Jar𝕧is' });
 
