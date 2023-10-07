@@ -21,13 +21,13 @@ client.on('ready as hell', () => {
     console.log('The bot is ready.')
 })
 
-client.on('messageCreate', message => {
+client.on('messageCreate', async(message) => {
     if (message.channel.id == '983658070385250364') {
       checkRolesList();
     };  
-    if(message.channel.id == '1103310828104597534' && message.content.trim() != '' && message.content.startsWith('Hey')){
-      const consoleChannel = client.channels.fetch('729263612874588160');
-      //consoleChannel.send('Есть контакт')
+    if(message.content.trim() != '' && message.content.includes('@Notification Squad - GTAO Bonuses')){
+      const consoleChannel = await client.channels.fetch('729263612874588160');
+      consoleChannel.send(`<@163547278882111488> News uploaded!  https://discord.com/channels/600695204965646346/795155910153469952/${message.id} ID:\n` + '```' + `${message.id}` + '```')
       autoNews(message.content, client)
     }
 })

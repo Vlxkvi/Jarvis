@@ -6,6 +6,7 @@ module.exports = {
   async execute(interaction) {
     try {
       const Titles = {
+        'Something new': 'empty',
         'FREE VEHICLES': 'empty',
         'NEW CONTENT': 'empty',
         'BONUS': 'empty',
@@ -15,15 +16,13 @@ module.exports = {
         '2X GTA$ & RP': 'empty',
         '1.5X GTA$ & RP': 'empty',
         '2X SPEED': 'empty',
+        '2X': 'empty',
         'DISCOUNTS (50% off)': 'empty',
         'DISCOUNTS (40% off)': 'empty',
         'DISCOUNTS (30% off)': 'empty',
         'DISCOUNTS (25% off)': 'empty',
         'DISCOUNTS (20% off)': 'empty',
         'PREMIUM RACE & WEEKLY TRIALS': 'empty',
-        'RETURNING MODES': 'empty',
-        '2X GTA$': 'empty',
-        '2X GTA$, RP & AP': 'empty',
       };
       const newsChannelId = '795155910153469952';
       const messageId = interaction.options.getString('messageid');
@@ -33,32 +32,34 @@ module.exports = {
       let notFoundTitles = [];
       let linesCount = 0;
 
+      lines[1] = '### Something new'
+
       // Checking all the lines if they are titles
       lines.forEach((line) => {
         if (line.startsWith('### ')) {
           let title = line.replace('### ', '')
           title = title.replaceAll(`*`,``)
-          console.log(`${linesCount} -${title}-`)
           
-          // Checking if the title exist as key is in the "Titles" dictionary          
-          if (title in Titles){
-            let discountGroup = '';
-            let testingLinesCount = linesCount + 1
-            let testingLine = lines[testingLinesCount]
-            console.log(line)
-            // Creating and updating "discountGroup" variable to set it as value to its title key in "Titles" dictionary
-            while(testingLinesCount < lines.length && !testingLine.startsWith('### ')){
-              discountGroup += `${testingLine}\n`
-            
-              testingLinesCount++;
-              testingLine = lines[testingLinesCount]
-            }
-            Titles[title] = discountGroup
-            
-          } else { 
-            notFoundTitles.push(`${title}`)
-
+          // Checking if the title exist as key is in the "Titles" dictionary     
+          let discountGroup = '';
+          let testingLinesCount = linesCount + 1
+          let testingLine = lines[testingLinesCount]
+          // Creating and updating "discountGroup" variable to set it as value to its title key in "Titles" dictionary
+          while(testingLinesCount < lines.length && !testingLine.startsWith('### ')){
+            discountGroup += `${testingLine}\n`
+          
+            testingLinesCount++;
+            testingLine = lines[testingLinesCount]
           }
+          if(title in Titles){
+            Titles[title] = discountGroup
+          } else {
+            notFoundTitles.push({
+              key: title,
+              value: discountGroup
+            })
+          }
+          
         }
         linesCount++ ;
       });
@@ -67,20 +68,18 @@ module.exports = {
 
       // Working with Free Vehicles
       let content = Titles['FREE VEHICLES'].split('\n')
-      console.log(Titles)
-      console.log(content)
 
       // Working with Free Vehicles (Casino reward)
       let FullCarNameCasino = content[0].replaceAll('*', '')
-      console.log(FullCarNameCasino)
       FullCarNameCasino = FullCarNameCasino.replace('- The Lucky Wheel Podium Vehicle: ', '')
-      console.log(FullCarNameCasino)
+      if(FullCarNameCasino.includes('(')){
+        FullCarNameCasino = FullCarNameCasino.slice(0, FullCarNameCasino.indexOf('('))
+      }
       let completeCasinoReward = `─ [${FullCarNameCasino.trim()}](https://gta.fandom.com/wiki/${makeALink(FullCarNameCasino)})`
       CompleteNewsMessage += `► Транспорт на подиуме казино:\n${completeCasinoReward}\n\n`
 
       // Working with Free Vehicles (AutoClub reward)
       let AutoClubContent = content[1].replaceAll("*", '');
-      console.log(AutoClubContent)
       AutoClubContent = AutoClubContent.replace('- LS Car Meet Prize Ride: ','')
       let autoClubParts = AutoClubContent.split(' - ');
       let FullCarNameAutoClub = autoClubParts[0].substring(0, autoClubParts[0].indexOf('('))
@@ -88,7 +87,10 @@ module.exports = {
       CompleteNewsMessage += `► Транспорт в автоклубе:\n${completeAutoClubReward}\n\n`
       let ChallangeAutoClub = `─ ${autoClubParts[1].trim()}`
       CompleteNewsMessage += `► Испытание:\n${ChallangeAutoClub}\n\n`
-
+      
+      // Working with something new
+      CompleteNewsMessage += `► Что-то новенькое:\n${Titles['Something new'].replaceAll('-','─')}\n`
+            
       // Working with New Content
       if(Titles['NEW CONTENT'] != 'empty'){
         CompleteNewsMessage += `► Новый контент:\n${Titles['NEW CONTENT'].replace(/- /g, '─ ')}\n`
@@ -149,6 +151,9 @@ module.exports = {
       }
       if(Titles['2X SPEED'] != 'empty'){ 
         CompleteNewsMessage += `► 2X скорость:\n${Titles['2X SPEED'].replace(/- /g, '─ ')}\n` 
+      }
+      if(Titles['2X'] != 'empty'){ 
+        CompleteNewsMessage += `► 2X :\n${Titles['2X'].replace(/- /g, '─ ')}\n` 
       }
 
       // Working with discounts
@@ -211,6 +216,12 @@ module.exports = {
             return;
         }
       })
+      CompleteNewsMessage += `NOT FOUND:\n\n`
+      if (Object.keys(notFoundTitles).length !== 0) {
+        notFoundTitles.forEach((title) => {
+          CompleteNewsMessage += `► ${title.key}:\n${title.value.replaceAll('-','─')}`
+        })
+      }
 
       const newsEmbed = new EmbedBuilder()
         .setColor(0xff0000)
@@ -219,17 +230,7 @@ module.exports = {
         .setFooter({ text: '*нажав на название машины, вы перейдёте на её страницу в интернете', iconURL: 'https://c.tenor.com/ulin4ZJ8QcYAAAAi/la-gringa-la-sole.gif'});
       interaction.reply({ embeds: [newsEmbed], files: ['1Storage/OriginalNews.txt','1Storage/News.txt']});
             
-      if (notFoundTitles.length !== 0) {
-        let notFoundMessage = 'Not found: ';
-        
-        for (let i = 0; i < notFoundTitles.length-1 ; i++) {
-            notFoundMessage += `\`${notFoundTitles[i]}\` ,`;
-        }
-        
-        notFoundMessage += `\`${notFoundTitles[notFoundTitles.length - 1]}\``;
-        
-        interaction.channel.send(notFoundMessage);
-    }
+      
     
     } catch (error) {
       console.error(error);
