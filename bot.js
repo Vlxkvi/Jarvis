@@ -1,7 +1,9 @@
-const { Client, GatewayIntentBits, EmbedBuilder, MessageEmbed, WebhookClient } = require("discord.js")
+const { Client, GatewayIntentBits, EmbedBuilder } = require("discord.js")
 const fs = require('fs').promises;
 const { logCommandExecution } = require('./functions/logger.js');
 const { autoNews } = require('./functions/autoNews.js')
+const { checkRoleslist } = require('./functions/checkRoleslist.js');
+const { channel } = require("diagnostics_channel");
 
 
 require("dotenv/config")
@@ -17,18 +19,21 @@ const client = new Client({
         GatewayIntentBits.GuildPresences
     ],
 })
-client.on('ready as hell', () => {
-    console.log('The bot is ready.')
-})
 
 client.on('messageCreate', async(message) => {
     if (message.channel.id == '983658070385250364') {
-      checkRolesList();
-    };  
+      checkRoleslist(client);
+    }
     if(message.content.trim() != '' && message.content.includes('@Notification Squad - GTAO Bonuses')){
       const consoleChannel = await client.channels.fetch('729263612874588160');
       consoleChannel.send(`<@163547278882111488> News uploaded!  https://discord.com/channels/600695204965646346/795155910153469952/${message.id} ID:\n` + '```' + `${message.id}` + '```')
       autoNews(message.content, client)
+    }
+    if(message.channel.id == '763822930790056037' && !message.content.startsWith(',suggest ') && !message.author.bot){
+      message.reply(`Пиши свое предложение начиная с **\`,suggest \`**, что бы бот <@708299727166242866> увидел твое предложение, и отослал его администрации. Иначе твое сообщение не увидят.`)
+    }
+    if(message.channel.id == '1043620197426270289' && !message.content.startsWith('.suggest ') && !message.author.bot){
+      message.reply(`Пиши свое предложение начиная с **\`.suggest \`**, что бы бот <@564426594144354315> увидел твое предложение, и отослал его администрации. Иначе твое сообщение не увидят.`)
     }
 })
 
@@ -106,83 +111,5 @@ client.on('interactionCreate', async(interaction) => {
     }
     
 })
-
-
-async function checkRolesList() {
-  try {
-    const currentTime = Math.floor(Date.now() / 1000)
-
-    // Read roleslist.json
-    const data = await fs.readFile('roleslist.json', 'utf8');
-    const rolesList = JSON.parse(data);
-
-    rolesList.forEach(async (entry) => {
-      const key = Object.keys(entry)[0]; 
-      const entryTime = parseInt(key); 
-      const timeDifference = currentTime - entryTime;
-
-      // Time to keep role - 3 days
-      const keepingTime = 720*60*60; 
-
-      if (timeDifference > keepingTime) {
-        console.log(`Вийшов ${key} зараз ${currentTime}, пройшло ${currentTime - entryTime}`);
-        // Removing roles 
-        const { user1, user2, user3, user4, user5, role } = entry[key];
-        const guild = client.guilds.cache.get(process.env.GUILD_ID);
-        let userRemovedRoles = [];
-
-        if (user1) {
-          const member = guild.members.cache.get(user1);
-          if (member) await member.roles.remove(role);
-          userRemovedRoles.push( `<@${member.id}>` )
-        }
-        if (user2) {
-          const member = guild.members.cache.get(user2);
-          if (member) await member.roles.remove(role);
-          userRemovedRoles.push( `<@${member.id}>` )
-        }
-        if (user3) {
-          const member = guild.members.cache.get(user3);
-          if (member) await member.roles.remove(role);
-          userRemovedRoles.push( `<@${member.id}>` );
-        }
-        if (user4) {
-          const member = guild.members.cache.get(user4);
-          if (member) await member.roles.remove(role);
-          userRemovedRoles.push( `<@${member.id}>` );
-        }
-        if (user5) {
-          const member = guild.members.cache.get(user5);
-          if (member) await member.roles.remove(role);
-          userRemovedRoles.push( `<@${member.id}>` );
-        }
-        output = `Role <@&${role}> was removed from: `
-        output += userRemovedRoles.join(', ');
-
-        const logChannel = await client.channels.fetch('1128424838692880464');
-
-         const RemovingEmbed = new EmbedBuilder()
-          .setColor(0xdc143c)
-          .setDescription(output)
-          .setTimestamp()
-
-        await logChannel.send({ embeds: [RemovingEmbed] });
-
-        // Deleting record from roleslist.json
-        rolesList.splice(rolesList.indexOf(entry), 1);
-
-        // Rewriting roleslist.json
-        try {
-          const jsonData = JSON.stringify(rolesList, null, 2);
-          await fs.writeFile('roleslist.json', jsonData);
-        } catch (err) {
-          console.error('Error writing to roleslist.json:', err);
-        }
-      }
-    });
-  } catch (error) {
-    console.error(error);
-  }
-}
 
 client.login(process.env.TOKEN)
