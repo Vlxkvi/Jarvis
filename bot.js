@@ -2,8 +2,9 @@ const { Client, GatewayIntentBits, EmbedBuilder } = require("discord.js")
 const fs = require('fs').promises;
 const { logCommandExecution } = require('./functions/logger.js');
 const { autoNews } = require('./functions/autoNews.js')
-const { checkRoleslist } = require('./functions/checkRoleslist.js');
+const { checkRoleslist } = require('./functions/checkRolesList.js');
 const { channel } = require("diagnostics_channel");
+const schedule = require("node-schedule")
 
 
 require("dotenv/config")
@@ -21,9 +22,6 @@ const client = new Client({
 })
 
 client.on('messageCreate', async(message) => {
-    if (message.channel.id == '983658070385250364') {
-      checkRoleslist(client);
-    }
     if(message.content.trim() != '' && message.content.includes('@Notification Squad - GTAO Bonuses')){
       const consoleChannel = await client.channels.fetch('729263612874588160');
       consoleChannel.send(`<@163547278882111488> News uploaded!  https://discord.com/channels/600695204965646346/795155910153469952/${message.id} ID:\n` + '```' + `${message.id}` + '```')
@@ -110,6 +108,10 @@ client.on('interactionCreate', async(interaction) => {
       checkCommand.execute(interaction, client, guild);
     }
     
+})
+
+schedule.scheduleJob('0 0 * * *', function(){
+  checkRoleslist(client);
 })
 
 client.login(process.env.TOKEN)

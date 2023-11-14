@@ -198,6 +198,13 @@ async function autoNews(messageContent, client){
       }))
       CompleteNewsMessage += `► Скидка 20% на:\n${complete20Discounts}\n`
     }
+    
+    if (Object.keys(notFoundTitles).length !== 0) {
+      CompleteNewsMessage += `NOT FOUND:\n\n`
+      notFoundTitles.forEach((title) => {
+        CompleteNewsMessage += `► ${title.key}:\n${title.value.replaceAll('-','─')}`
+      })
+    }
 
     fs.writeFile('1Storage/OriginalNews.txt', messageContent, (err) => {
       if (err) {
@@ -212,13 +219,6 @@ async function autoNews(messageContent, client){
           return;
       }
     })
-    
-    if (Object.keys(notFoundTitles).length !== 0) {
-      CompleteNewsMessage += `NOT FOUND:\n\n`
-      notFoundTitles.forEach((title) => {
-        CompleteNewsMessage += `► ${title.key}:\n${title.value.replaceAll('-','─')}`
-      })
-    }
 
     const newsEmbed = new EmbedBuilder()
       .setColor(0xff0000)
