@@ -49,7 +49,7 @@ module.exports = {
         let notFoundRolesArray = NotFoundRoles(user, eventRoles)
 
         // If user doesn't have specified role
-        if ( notFoundRolesArray.includes(roleOption.id) ){
+        if ( notFoundRolesArray.includes(roleOption.id) || !eventRoles.includes(roleOption.id)){
           // Add to Json  
           RolesList.push({
             [keyToPush]: usingTime,

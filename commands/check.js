@@ -4,13 +4,7 @@ require("dotenv/config")
 module.exports = {
       async execute(interaction, client, guild) {
       try{
-        const loadingEmbed = new EmbedBuilder()
-          .setColor(0x9caef2)
-          .setDescription('Loading, it will take few seconds')
-          .setTimestamp()
-          .setFooter({ text: 'Jar𝕧is' });
-
-        await interaction.reply({ embeds: [loadingEmbed], fetchReply: true });
+        await interaction.deferReply({});
 
         const userOption1 = interaction.options.getUser('user1');
         const member = interaction.guild.members.cache.get(userOption1.id);

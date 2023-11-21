@@ -4,12 +4,7 @@ require("dotenv/config");
 module.exports = {
   async execute(interaction, client, guild) {
     try {
-      const loadingEmbed = new EmbedBuilder()
-        .setColor(0x9caef2)
-        .setDescription('I\'m working on it, it may take a few seconds...')
-        .setTimestamp()
-        .setFooter({ text: 'Jar𝕧is' });
-      await interaction.reply({ embeds: [loadingEmbed], fetchReply: true });
+      await interaction.deferReply({});
 
       const userOption1 = interaction.options.getUser('user');
       const member = interaction.guild.members.cache.get(userOption1.id);
@@ -40,17 +35,18 @@ module.exports = {
         //Removing 10 event roles
         await Promise.all(roles.map(roleId => member.roles.remove(roleId)));
 
+        //Adding champion
+        await member.roles.add(champions[championNumber + 1]);
+
         //making output message
         outputStatus = `<@${member.id}>\n**Added** <@&${champions[championNumber + 1]}>`;
 
-        //Checking if member had any champion role, it get removed
+        //Checking if member had any champion role, it gets removed
         if (championNumber != -1) {
           await member.roles.remove(champions[championNumber]);
           outputStatus += ` \n**Removed** <@&${champions[championNumber]}>`;
         }
 
-        //Adding champion
-        await member.roles.add(champions[championNumber + 1]);
       }
 
       const EventEmbed = new EmbedBuilder()

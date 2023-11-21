@@ -29,7 +29,6 @@ module.exports = {
           const key = Object.keys(entry)[0];
           const usingTime = entry[key];
 
-          const formattedTime = `<t:${usingTime}:f> (<t:${usingTime}:R>)`;
           const parts = key.split("-");
           const user = parts[0];
           const role = parts[1];
