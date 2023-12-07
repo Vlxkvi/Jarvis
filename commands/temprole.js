@@ -16,6 +16,8 @@ module.exports = {
       const userOption4 = interaction.options.getUser('user4');
       const userOption5 = interaction.options.getUser('user5');
 
+
+      
       // Creating variables of options
       const user1 = interaction.guild.members.cache.get(userOption1.id);
       const user2 = userOption2 ? interaction.guild.members.cache.get(userOption2.id) : null;
@@ -30,6 +32,8 @@ module.exports = {
       let addedRightRole = []
       let addedAnotherRole = []
       let usersWithAllRoles = []
+      let outputUsersToCopy = '1. '
+      let outputRolesToCopy = '2. '
 
       let RolesList = [];
       try {
@@ -113,6 +117,9 @@ module.exports = {
         output += `Role ${roleOption} added to: `
         for (let i = 0; i < addedRightRole.length; i++) {
           output += addedRightRole[i] ? `<@${addedRightRole[i]}> ` : '';
+
+          outputRolesToCopy += `${roleOption} `
+          outputUsersToCopy += `<@${addedRightRole[i]}> `
         }
       }
 
@@ -123,6 +130,11 @@ module.exports = {
 
         for (let i = 0; i < 5; i++) {
           output += object[Object.keys(object)[0]][i] ? ` <@${object[Object.keys(object)[0]][i]}>` : '';
+          if(object[Object.keys(object)[0]][i]){
+            outputRolesToCopy += `<@&${Object.keys(object)[0]}> `
+            outputUsersToCopy += `<@${object[Object.keys(object)[0]][i]}> `
+          }
+          
         }
       }
 
@@ -142,6 +154,8 @@ module.exports = {
         console.error('Error writing to roleslist.json:', err);
       }
       
+      output += `\n\`\`\`${outputUsersToCopy}\n${outputRolesToCopy}\`\`\``
+
       // Making embed reply
       let roleEmbed = new EmbedBuilder()
       .setColor(0x45f03e)

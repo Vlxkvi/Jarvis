@@ -53,11 +53,11 @@ module.exports = {
           }
 
           const formattedTime = `<t:${timestamp}:f> (<t:${timestamp}:R>)`;
-          if (output.length < 1800) {
+          if (output.length < 1900) {
             output += `${formattedTime}\n${usersWithRole}\n`;
-          } else if (output2.length < 1800) {
+          } else if (output2.length < 1900) {
             output2 += `${formattedTime}\n${usersWithRole}\n`;
-          } else if (output3.length < 1800) {
+          } else if (output3.length < 1900) {
             output3 += `${formattedTime}\n${usersWithRole}\n`;
           }
         }

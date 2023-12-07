@@ -38,19 +38,19 @@ async function checkForChampions(client, logID) {
                     break;
                 }
             }
-        /*
+        
             // Removing 10 event roles
             await Promise.all(roles.map(roleId => member.roles.remove(roleId)));
         
             // Adding champion
             await member.roles.add(champions[championNumber + 1]);
-        */
+    
             // Making output message
             outputStatus += `\n\n<@${member.id}>\n**Added** <@&${champions[championNumber + 1]}>`;
         
             // Checking if the member had any champion role, it gets removed
             if (championNumber != -1) {
-                /*-await member.roles.remove(champions[championNumber]);*/
+                await member.roles.remove(champions[championNumber]);
                 outputStatus += ` \n**Removed** <@&${champions[championNumber]}>`;
             }
         }

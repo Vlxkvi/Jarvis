@@ -162,7 +162,25 @@ const commands = [
                 required: true,
             }
         ],
-    }
+    },
+    {
+        name: 'removerole',
+        description: 'Remove role you\'ve given incorrectly',
+        options: [
+            {
+                name: 'role',
+                description: 'Role which was given incorrectly',
+                type: ApplicationCommandOptionType.Role,
+                required: true,
+            },
+            {
+                name: 'user',
+                description: 'User who got wrong role',
+                type: ApplicationCommandOptionType.User,
+                required: true,
+            }
+        ]
+    },
 ];
 
 const rest = new REST({version: '10'}).setToken(process.env.TOKEN);

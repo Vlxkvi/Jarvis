@@ -79,6 +79,12 @@ client.on('interactionCreate', async(interaction) => {
     logCommandExecution(client, interaction.commandName, interaction.user, 'Successfully');
   }
   
+  if (interaction.commandName === 'removerole') {
+    const checkCommand = require(commandsPath + '/removerole.js');
+    checkCommand.execute(interaction, client, guild);
+    logCommandExecution(client, interaction.commandName, interaction.user, 'Successfully');
+  }
+  
   if (interaction.commandName === 'event') {
     const checkCommand = require(commandsPath + '/event.js');
     checkCommand.execute(interaction, client, guild);
