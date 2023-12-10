@@ -116,6 +116,16 @@ client.on('interactionCreate', async(interaction) => {
     const checkCommand = require(commandsPath + '/say.js');
     checkCommand.execute(interaction, client, guild);
   }
+
+  if (interaction.commandName === 'addexp') {
+    const checkCommand = require(commandsPath + '/addexp.js');
+    checkCommand.execute(interaction, client, guild);
+  }
+
+  if (interaction.commandName === 'clearcountinglist') {
+    const checkCommand = require(commandsPath + '/clearcountinglist.js');
+    checkCommand.execute(interaction, client, guild);
+  }
 })
 
 schedule.scheduleJob('0 0 * * *', function(){

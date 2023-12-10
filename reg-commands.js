@@ -181,6 +181,38 @@ const commands = [
             }
         ]
     },
+    {
+        name: 'addexp',
+        description: 'helps counting exp to give for winning',
+        options: [
+            {
+                name: 'user',
+                description: 'user',
+                type: ApplicationCommandOptionType.User,
+                required: true,
+            },
+            {
+                name: 'amount',
+                description: 'amount of exp',
+                type: ApplicationCommandOptionType.Integer,
+                choices: [
+                    {
+                        name: 10000,
+                        value: 10000
+                    },
+                    {
+                        name: 5000,
+                        value: 5000
+                    }
+                ],
+                required: true,
+            }
+        ]
+    },
+    {
+        name: 'clearcountinglist',
+        description: 'clears counting list'
+    },
 ];
 
 const rest = new REST({version: '10'}).setToken(process.env.TOKEN);
