@@ -7,7 +7,7 @@ module.exports = {
     const usingTime = Math.floor(Date.now() / 1000);
     try {
       await interaction.deferReply({});
-        let color = 0xE8D144;
+      let color = 0xE8D144;
       // Getting role and users from options
       const roleOption = interaction.options.getRole('role');
       const userOption = interaction.options.getUser('user');
@@ -33,7 +33,6 @@ module.exports = {
       if (indexToDelete !== -1) {
         const roleTime = rolesList[indexToDelete][keyToCheck];
 
-        console.log(usingTime - roleTime)
         // Checking if the role was given more than 10 minutes ago
         if (usingTime - roleTime < 600) {
           // Removing the role from the member
@@ -44,7 +43,7 @@ module.exports = {
           output = `Role ${roleOption} was removed from ${userOption}`;
           color = 0xB1F73E
         } else {
-          output = `Role ${roleOption} was given more than 10 minutes ago.\nAsk <@&760197563205943308> or <@&713451470648770583>`;
+          output = `Role ${roleOption} was given ${userOption} more than 10 minutes ago.\nAsk <@&760197563205943308> or <@&713451470648770583>`;
         }
       } else {
         output = `${userOption} does not have ${roleOption} role`;

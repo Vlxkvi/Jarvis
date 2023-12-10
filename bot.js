@@ -3,9 +3,9 @@ const fs = require('fs').promises;
 const { logCommandExecution } = require('./functions/logger.js');
 const { autoNews } = require('./functions/autoNews.js')
 const { checkRoleslist } = require('./functions/checkRolesList.js');
-const { channel } = require("diagnostics_channel");
-const schedule = require("node-schedule");
 const { checkForChampions } = require("./functions/checkForChampions.js");
+const { checkForUnregisteredRoles } = require("./functions/checkForUnregisteredRoles.js");
+const schedule = require("node-schedule");
 
 
 require("dotenv/config")
@@ -120,10 +120,8 @@ client.on('interactionCreate', async(interaction) => {
 
 schedule.scheduleJob('0 0 * * *', function(){
   checkRoleslist(client);
-})
-
-schedule.scheduleJob('0 0 * * *', function(){
   checkForChampions(client, '1128424838692880464');
+  checkForUnregisteredRoles(client)
 })
 
 client.login(process.env.TOKEN)
