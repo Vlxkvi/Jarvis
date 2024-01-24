@@ -213,6 +213,22 @@ const commands = [
         name: 'clearcountinglist',
         description: 'clears counting list'
     },
+    {
+        name: 'play',
+        description: 'Воспроизведение музыки в голосовом канале.',
+        options: [
+            {
+                name: 'query',
+                description: 'Укажите ссылку на трек, чтобы бот добавил его в очередь воспроизведения.',
+                type: ApplicationCommandOptionType.String,
+                required: true,
+            }
+        ]
+    },
+    {
+        name: 'skip',
+        description: 'Пропуск текущего трека и переход к следующему в очереди воспроизведения.',
+    }
 ];
 
 const rest = new REST({version: '10'}).setToken(process.env.TOKEN);

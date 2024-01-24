@@ -6,6 +6,7 @@ const { checkRoleslist } = require('./functions/checkRolesList.js');
 const { checkForChampions } = require("./functions/checkForChampions.js");
 const { checkForUnregisteredRoles } = require("./functions/checkForUnregisteredRoles.js");
 const schedule = require("node-schedule");
+const { Console } = require("console");
 
 
 require("dotenv/config")
@@ -28,13 +29,29 @@ client.on('messageCreate', async(message) => {
     consoleChannel.send(`<@163547278882111488> News uploaded!  https://discord.com/channels/600695204965646346/795155910153469952/${message.id} ID:\n` + '```' + `${message.id}` + '```')
     autoNews(message.content, client)
   }
-  if(message.channel.id == '763822930790056037' && !message.content.startsWith(',suggest ') && !message.author.bot){
-    message.reply(`Пиши свое предложение начиная с **\`,suggest \`**, что бы бот <@708299727166242866> увидел твое предложение, и отослал его администрации. Иначе твое сообщение не увидят.`)
+  if(message.channel.id == '763822930790056037' && !message.content.startsWith(',suggest') && !message.author.bot){
+    message.reply(`Пиши свое предложение по такому шаблону: **\`,suggest идея для ивента\`**, иначе твое предложение не рассмотрят!`)
   }
-  if(message.channel.id == '1043620197426270289' && !message.content.startsWith('.suggest ') && !message.author.bot){
-    message.reply(`Пиши свое предложение начиная с **\`.suggest \`**, что бы бот <@564426594144354315> увидел твое предложение, и отослал его администрации. Иначе твое сообщение не увидят.`)
+  if(message.channel.id == '1043620197426270289' && !message.content.startsWith('.suggest') && !message.author.bot){
+    message.reply(`Пиши свое предложение по такому шаблону **\`.suggest идея по серверу\`**, иначе твое предложение не рассмотрят!`)
+  }
+  if(message.content == "j.checkRolesList" && message.author.id == "163547278882111488"){
+    checkRoleslist(client);
+  }
+  if(message.content == "j.checkForChampions" && message.author.id == "163547278882111488"){
+    checkForChampions(client, '1128424838692880464');
+  }
+  if(message.content == "j.checkForUnregisteredRoles" && message.author.id == "163547278882111488"){
+    checkForUnregisteredRoles(client)
   }
 })
+
+client.on("messageDelete", (messageDelete) => {
+  if(messageDelete.channel.id != "729263612874588160"){ return }
+  client.users.fetch('163547278882111488', false).then((user) => {
+    user.send(`Message by <@${messageDelete.author.id}> was deleted: \`\`\`${messageDelete.content}\`\`\` `);
+   });
+ });
 
 client.on('interactionCreate', async(interaction) => {
   if (!interaction.isChatInputCommand()) return;

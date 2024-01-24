@@ -63,31 +63,29 @@ module.exports = {
         }
       }
 
-      let temprolesEmbed = new EmbedBuilder()
+      let embedsToSend = []
+
+      let temprolesEmbed1 = new EmbedBuilder()
         .setTitle('Current roles:')
         .setColor(0x9caef2)
         .setDescription(output);
+      embedsToSend.push(temprolesEmbed1)
 
-      interaction.editReply({ embeds: [temprolesEmbed] });
-
-      if (output2 && !output3) {
+      if (output2) {
         let temprolesEmbed2 = new EmbedBuilder()
           .setColor(0x9caef2)
           .setDescription(output2);
-        interaction.editReply({ embeds: [temprolesEmbed, temprolesEmbed2] });
+        embedsToSend.push(temprolesEmbed2)
       }
 
       if (output3) {
-        let temprolesEmbed2 = new EmbedBuilder()
-          .setColor(0x9caef2)
-          .setDescription(output2);
-
         let temprolesEmbed3 = new EmbedBuilder()
           .setColor(0x9caef2)
           .setDescription(output3);
-
-        interaction.editReply({ embeds: [temprolesEmbed, temprolesEmbed2, temprolesEmbed3] });
+        embedsToSend.push(temprolesEmbed3)
       }
+
+      interaction.editReply({ embeds: embedsToSend });
     } catch (error) {
       console.error(error);
     }
