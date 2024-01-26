@@ -80,6 +80,12 @@ async function autoNews(messageContent, client){
     let completeAutoClubReward = `─ [${FullCarNameAutoClub.trim()}](https://gta.fandom.com/wiki/${makeALink(FullCarNameAutoClub)})`;
     CompleteNewsMessage += `► Транспорт в автоклубе:\n${completeAutoClubReward}\n\n`
     let ChallangeAutoClub = `─ ${autoClubParts[1].trim()}`
+      
+    ChallangeAutoClub = ChallangeAutoClub
+      .replace("Place Top ", "Займите Топ-")
+      .replace("in the LS Car Meet Series for", "в гонках серии Автоклуба ЛС")
+      .replace("days in a row", "дня подряд");
+      
     CompleteNewsMessage += `► Испытание:\n${ChallangeAutoClub}\n\n`
     
     // Working with something new
