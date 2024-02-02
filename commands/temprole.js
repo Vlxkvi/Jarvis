@@ -140,9 +140,9 @@ module.exports = {
 
       // Users who have all roles
       if (usersWithAllRoles.length != 0){
-        output += `Users who already have all 10 roles:`
+        output += `\nUsers who already have all 10 roles:`
         for ( i = 0; i < usersWithAllRoles.length; i++){
-          output += ` ${usersWithAllRoles[i]}`
+          output += ` <@${usersWithAllRoles[i]}>`
         }
       }
       // Rewriting roleslist.json

@@ -23,11 +23,13 @@ const client = new Client({
   ],
 })
 
+const consoleChannel = await client.channels.fetch('729263612874588160');
+
 client.on('messageCreate', async(message) => {
   if(message.content.trim() != '' && message.content.includes('@PingGTAOnline')){
-    const consoleChannel = await client.channels.fetch('729263612874588160');
     consoleChannel.send(`<@163547278882111488> News uploaded!  https://discord.com/channels/600695204965646346/795155910153469952/${message.id} ID:\n` + '```' + `${message.id}` + '```')
-    autoNews(message.content, client)
+    try{autoNews(message.content, client)}
+    catch{consoleChannel.send(`Something went wrong... <:sad:977334495709634560>`)}
   }
   if(message.channel.id == '763822930790056037' && !message.content.startsWith(',suggest') && !message.author.bot){
     message.reply(`Пиши свое предложение по такому шаблону: **\`,suggest идея для ивента\`**, иначе твое предложение не рассмотрят!`)
@@ -47,11 +49,13 @@ client.on('messageCreate', async(message) => {
 })
 
 client.on("messageDelete", (messageDelete) => {
-  if(messageDelete.channel.id != "729263612874588160"){ return }
+  if (messageDelete.channel.id != "729263612874588160") { return; }
+  
   client.users.fetch('163547278882111488', false).then((user) => {
-    user.send(`Message by <@${messageDelete.author.id}> was deleted: \`\`\`${messageDelete.content}\`\`\` `);
-   });
- });
+    user.send(`Message by <@${messageDelete.author.id}> was deleted:\n${JSON.stringify(messageDelete, null, 2)}`);
+  });
+});
+
 
 client.on('interactionCreate', async(interaction) => {
   if (!interaction.isChatInputCommand()) return;
@@ -146,9 +150,12 @@ client.on('interactionCreate', async(interaction) => {
 })
 
 schedule.scheduleJob('0 0 * * *', function(){
-  checkRoleslist(client);
-  checkForChampions(client, '1128424838692880464');
-  checkForUnregisteredRoles(client)
+  try{checkRoleslist(client);}
+  catch{consoleChannel.send(`<@163547278882111488> Something wrong with CheckRolesList function`)}
+  try{checkForChampions(client, '1128424838692880464');}
+  catch{consoleChannel.send(`<@163547278882111488> Something wrong with CheckForChampions function`)}
+  try{checkForUnregisteredRoles(client)}
+  catch{consoleChannel.send(`<@163547278882111488> Something wrong with CheckForUnregistered function`)}
 })
 
 client.login(process.env.TOKEN)
