@@ -1,13 +1,12 @@
-const { EmbedBuilder, Permissions, roleMention } = require("discord.js");
+const { EmbedBuilder} = require("discord.js");
 const fs = require('fs').promises; 
 require("dotenv/config");
 
 module.exports = {
   async execute(interaction, client, guild) {
     const usingTime = Math.floor(Date.now() / 1000);
+    await interaction.deferReply({})
     try {
-      await interaction.deferReply({})
-
       // Getting role and users from options
       const roleOption = interaction.options.getRole('role');
       const userOption1 = interaction.options.getUser('user1');
@@ -16,8 +15,6 @@ module.exports = {
       const userOption4 = interaction.options.getUser('user4');
       const userOption5 = interaction.options.getUser('user5');
 
-
-      
       // Creating variables of options
       const user1 = interaction.guild.members.cache.get(userOption1.id);
       const user2 = userOption2 ? interaction.guild.members.cache.get(userOption2.id) : null;

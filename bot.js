@@ -23,10 +23,10 @@ const client = new Client({
   ],
 })
 
-const consoleChannel = await client.channels.fetch('729263612874588160');
 
 client.on('messageCreate', async(message) => {
-  if(message.content.trim() != '' && message.content.includes('@PingGTAOnline')){
+  if(message.content.trim() != '' && message.content.includes('@PingGTAOnline') && message.channel.id == `795155910153469952`){
+    const consoleChannel = await client.channels.fetch('729263612874588160');
     consoleChannel.send(`<@163547278882111488> News uploaded!  https://discord.com/channels/600695204965646346/795155910153469952/${message.id} ID:\n` + '```' + `${message.id}` + '```')
     try{autoNews(message.content, client)}
     catch{consoleChannel.send(`Something went wrong... <:sad:977334495709634560>`)}
@@ -37,25 +37,16 @@ client.on('messageCreate', async(message) => {
   if(message.channel.id == '1043620197426270289' && !message.content.startsWith('.suggest') && !message.author.bot){
     message.reply(`Пиши свое предложение по такому шаблону **\`.suggest идея по серверу\`**, иначе твое предложение не рассмотрят!`)
   }
-  if(message.content == "j.checkRolesList" && message.author.id == "163547278882111488"){
+  if(message.content === "j.checkRolesList" && message.author.id == "163547278882111488"){
     checkRoleslist(client);
   }
-  if(message.content == "j.checkForChampions" && message.author.id == "163547278882111488"){
+  if(message.content === "j.checkForChampions" && message.author.id == "163547278882111488"){
     checkForChampions(client, '1128424838692880464');
   }
-  if(message.content == "j.checkForUnregisteredRoles" && message.author.id == "163547278882111488"){
+  if(message.content === "j.checkForUnregisteredRoles" && message.author.id == "163547278882111488"){
     checkForUnregisteredRoles(client)
   }
 })
-
-client.on("messageDelete", (messageDelete) => {
-  if (messageDelete.channel.id != "729263612874588160") { return; }
-  
-  client.users.fetch('163547278882111488', false).then((user) => {
-    user.send(`Message by <@${messageDelete.author.id}> was deleted:\n${JSON.stringify(messageDelete, null, 2)}`);
-  });
-});
-
 
 client.on('interactionCreate', async(interaction) => {
   if (!interaction.isChatInputCommand()) return;
@@ -91,7 +82,7 @@ client.on('interactionCreate', async(interaction) => {
     checkCommand.execute(interaction, client, guild);
     logCommandExecution(client, interaction.commandName, interaction.user, 'Successfully');
 
-    await checkForChampions(client, interaction.channelId)
+    checkForChampions(client, interaction.channelId)
   }
 
   if (interaction.commandName === 'temproleslist'){
@@ -150,6 +141,7 @@ client.on('interactionCreate', async(interaction) => {
 })
 
 schedule.scheduleJob('0 0 * * *', function(){
+  const consoleChannel = client.channels.fetch('729263612874588160');
   try{checkRoleslist(client);}
   catch{consoleChannel.send(`<@163547278882111488> Something wrong with CheckRolesList function`)}
   try{checkForChampions(client, '1128424838692880464');}
