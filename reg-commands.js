@@ -206,6 +206,18 @@ const commands = [
                     }
                 ],
                 required: true,
+            },
+            {
+                name: 'isnewsession',
+                description: 'Is it new session of counting exp?',
+                type: ApplicationCommandOptionType.Boolean,
+                choices: [
+                    {
+                        name: 'yes',
+                        value: true
+                    }
+                ], 
+                required: false, 
             }
         ]
     },

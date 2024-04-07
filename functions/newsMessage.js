@@ -19,18 +19,22 @@ async function newsMessage(messageContent){
         'DISCOUNTS (25% off)': 'empty',
         'DISCOUNTS (20% off)': 'empty',
         'PREMIUM RACE & WEEKLY TRIALS': 'empty',
+        'WEEKLY CHALLENGE': 'empty',
+        'SALVAGE YARD ROBBERIES': 'empty',
+        'GUN VAN PRIMARY DISCOUNTS': 'empty',
       };
       const lines = messageContent.split("\n");
       let notFoundTitles = [];
       let linesCount = 0;
-    
-      lines[1] = '### Something new'
+      
+      if(lines[1] == ``){
+        lines[1] = '### Something new'
+      }
     
       // Checking all the lines if they are titles
       lines.forEach((line) => {
         if (line.startsWith('### ')) {
-          let title = line.replace('### ', '')
-          title = title.replaceAll(`*`,``)
+          let title = line.replace('### ', '').replaceAll(`*`,``).trim()
           
           // Checking if the title exist as key is in the "Titles" dictionary     
           let discountGroup = '';
@@ -38,6 +42,7 @@ async function newsMessage(messageContent){
           let testingLine = lines[testingLinesCount]
           // Creating and updating "discountGroup" variable to set it as value to its title key in "Titles" dictionary
           while(testingLinesCount < lines.length && !testingLine.startsWith('### ')){
+            
             discountGroup += `${testingLine}\n`
           
             testingLinesCount++;
@@ -62,8 +67,7 @@ async function newsMessage(messageContent){
       let content = Titles['FREE VEHICLES'].split('\n')
     
       // Working with Free Vehicles (Casino reward)
-      let FullCarNameCasino = content[0].replaceAll('*', '')
-      FullCarNameCasino = FullCarNameCasino.replace('- The Lucky Wheel Podium Vehicle: ', '')
+      let FullCarNameCasino = content[0].replaceAll('*', '').replace('- The Lucky Wheel Podium Vehicle: ', '').replace('[', '').replace(']','')
       if(FullCarNameCasino.includes('(')){
         FullCarNameCasino = FullCarNameCasino.slice(0, FullCarNameCasino.indexOf('('))
       }
@@ -71,8 +75,7 @@ async function newsMessage(messageContent){
       CompleteNewsMessage += `► Транспорт на подиуме казино:\n${completeCasinoReward}\n\n`
     
       // Working with Free Vehicles (AutoClub reward)
-      let AutoClubContent = content[1].replaceAll("*", '');
-      AutoClubContent = AutoClubContent.replace('- LS Car Meet Prize Ride: ','')
+      let AutoClubContent = content[1].replaceAll("*", '').replace('- LS Car Meet Prize Ride: ','').replace('[', '').replace(']','');
       let autoClubParts = AutoClubContent.split(' - ');
       let FullCarNameAutoClub = autoClubParts[0].substring(0, autoClubParts[0].indexOf('('))
       let completeAutoClubReward = `─ [${FullCarNameAutoClub.trim()}](https://gta.fandom.com/wiki/${makeALink(FullCarNameAutoClub)})`;
@@ -81,24 +84,29 @@ async function newsMessage(messageContent){
         
       ChallangeAutoClub = ChallangeAutoClub
         .replace("Place Top ", "Займите Топ-")
-        .replace("in the LS Car Meet Series for", "в гонках серии Автоклуба ЛС")
+        .replace("in the LS Car Meet Series", "в гонках серии Автоклуба ЛС")
         .replace("days in a row", "дня подряд");
         
       CompleteNewsMessage += `► Испытание:\n${ChallangeAutoClub}\n\n`
+
+      // Working with Weekly challenge
+      if(Titles['WEEKLY CHALLENGE'] != 'empty'){
+        CompleteNewsMessage += `► Недельное испытание:\n${Titles['WEEKLY CHALLENGE']}\n`
+      }
       
       // Working with something new
       if(Titles['Something new'] != 'empty'){
-        CompleteNewsMessage += `► Что-то новенькое:\n${Titles['Something new'].replaceAll('-','─')}\n`
+        CompleteNewsMessage += `► Что-то новенькое:\n${Titles['Something new']}\n`
       }
     
       // Working with New Content
       if(Titles['NEW CONTENT'] != 'empty'){
-        CompleteNewsMessage += `► Новый контент:\n${Titles['NEW CONTENT'].replace(/- /g, '─ ')}\n`
+        CompleteNewsMessage += `► Новый контент:\n${Titles['NEW CONTENT']}\n`
       }
       
       // Working with Bonus
       if(Titles['BONUS'] != 'empty'){
-        CompleteNewsMessage += `► Бонусы:\n${Titles['BONUS'].replace(/- /g, '─ ')}\n`
+        CompleteNewsMessage += `► Бонусы:\n${Titles['BONUS']}\n`
       }
     
       // Working with Test Rides
@@ -137,23 +145,23 @@ async function newsMessage(messageContent){
       CompleteNewsMessage += `► Тестовая машина HSW:\n${completeTestRideHSW}\n\n`
     
       // Working with ..X Bonuses
-      if(Titles['3X GTA$ & RP'] != 'empty'){ 
-        CompleteNewsMessage += `► 3X GTA$, RP:\n${Titles['3X GTA$ & RP'].replace(/- /g, '─ ')}\n` 
+      if(Titles['3X GTA$ & RP'] != 'empty'){
+        CompleteNewsMessage += `► 3X GTA$, RP:\n${Titles['3X GTA$ & RP'].replaceAll('- ','─ ')}\n` 
       }
       if(Titles['3X GTA$, RP & LS CAR MEET REP'] != 'empty'){ 
-        CompleteNewsMessage += `► Х3 GTA$, RP, Опыт автоклуба:\n${Titles['3X GTA$, RP & LS CAR MEET REP'].replace(/- /g, '─ ')}\n` 
+        CompleteNewsMessage += `► Х3 GTA$, RP, Опыт автоклуба:\n${Titles['3X GTA$, RP & LS CAR MEET REP'].replaceAll('- ','─ ')}\n` 
       }
       if(Titles['2X GTA$ & RP'] != 'empty'){ 
-        CompleteNewsMessage += `► 2X GTA$, RP:\n${Titles['2X GTA$ & RP'].replace(/- /g, '─ ')}\n` 
+        CompleteNewsMessage += `► 2X GTA$, RP:\n${Titles['2X GTA$ & RP'].replaceAll('- ','─ ')}\n` 
       }
       if(Titles['1.5X GTA$ & RP'] != 'empty'){ 
-        CompleteNewsMessage += `► 1.5X GTA$, RP:\n${Titles['1.5X GTA$ & RP'].replace(/- /g, '─ ')}\n`
+        CompleteNewsMessage += `► 1.5X GTA$, RP:\n${Titles['1.5X GTA$ & RP'].replaceAll('- ','─ ')}\n`
       }
       if(Titles['2X SPEED'] != 'empty'){ 
-        CompleteNewsMessage += `► 2X скорость:\n${Titles['2X SPEED'].replace(/- /g, '─ ')}\n` 
+        CompleteNewsMessage += `► 2X скорость:\n${Titles['2X SPEED'].replaceAll('- ','─ ')}\n` 
       }
       if(Titles['2X'] != 'empty'){ 
-        CompleteNewsMessage += `► 2X :\n${Titles['2X'].replace(/- /g, '─ ')}\n` 
+        CompleteNewsMessage += `► 2X :\n${Titles['2X'].replaceAll('- ','─ ')}\n` 
       }
     
       // Working with discounts
@@ -162,7 +170,7 @@ async function newsMessage(messageContent){
         let complete50Discounts = '';
         discounts50 = discounts50.split('\n')
         discounts50.forEach((line => {
-          complete50Discounts += `─ [${line.replace('- ','')}](https://gta.fandom.com/wiki/${makeALink(line)})\n`
+          complete50Discounts += `─ [${line.replaceAll('- ','')}](https://gta.fandom.com/wiki/${makeALink(line)})\n`
         }))
         CompleteNewsMessage += `► Скидка 50% на:\n${complete50Discounts}\n`
       }
@@ -171,7 +179,7 @@ async function newsMessage(messageContent){
         let complete40Discounts = '';
         discounts40 = discounts40.split('\n')
         discounts40.forEach((line => {
-          complete40Discounts += `─ [${line.replace('- ','')}](https://gta.fandom.com/wiki/${makeALink(line)})\n`
+          complete40Discounts += `─ [${line.replaceAll('- ','')}](https://gta.fandom.com/wiki/${makeALink(line)})\n`
         }))
         CompleteNewsMessage += `► Скидка 40% на:\n${complete40Discounts}\n`
       }
@@ -180,7 +188,7 @@ async function newsMessage(messageContent){
         let complete30Discounts = '';
         discounts30 = discounts30.split('\n')
         discounts30.forEach((line => {
-          complete30Discounts += `─ [${line.replace('- ','')}](https://gta.fandom.com/wiki/${makeALink(line)})\n`
+          complete30Discounts += `─ [${line.replaceAll('- ','')}](https://gta.fandom.com/wiki/${makeALink(line)})\n`
         }))
         CompleteNewsMessage += `► Скидка 30% на:\n${complete30Discounts}\n`
       }
@@ -189,7 +197,7 @@ async function newsMessage(messageContent){
         let complete25Discounts = '';
         discounts25 = discounts25.split('\n')
         discounts25.forEach((line => {
-          complete25Discounts += `─ [${line.replace('- ','')}](https://gta.fandom.com/wiki/${makeALink(line)})\n`
+          complete25Discounts += `─ [${line.replaceAll('- ','')}](https://gta.fandom.com/wiki/${makeALink(line)})\n`
         }))
         CompleteNewsMessage += `► Скидка 25% на:\n${complete25Discounts}\n`
       }
@@ -198,17 +206,42 @@ async function newsMessage(messageContent){
         let complete20Discounts = '';
         discounts20 = discounts20.split('\n')
         discounts20.forEach((line => {
-          complete20Discounts += `─ [${line.replace('- ','')}](https://gta.fandom.com/wiki/${makeALink(line)})\n`
+          complete20Discounts += `─ [${line.replaceAll('- ','')}](https://gta.fandom.com/wiki/${makeALink(line)})\n`
         }))
         CompleteNewsMessage += `► Скидка 20% на:\n${complete20Discounts}\n`
+      }
+
+      if(Titles[`GUN VAN PRIMARY DISCOUNTS`] != 'empty'){
+        let GunDiscountsLines = Titles['GUN VAN PRIMARY DISCOUNTS'].split('\n')
+        let discountForGun1 = GunDiscountsLines[0].split(':')[0].trim().replace('OFF','')
+        let GunDiscounts1 = GunDiscountsLines[0].split(':')[1].trim()
+        let discountForGun2 = GunDiscountsLines[1].split(':')[0].trim().replace('OFF for GTA+ Members','для игроков с подпиской GTA+ ')
+        let GunDiscounts2 = GunDiscountsLines[1].split(':')[1].trim()
+
+        CompleteNewsMessage += `► Скидки в оружейном фургоне:\n${discountForGun1}: [${GunDiscounts1}](https://gta.fandom.com/wiki/${GunDiscounts1.replace(' ','_')})\n${discountForGun2}: [${GunDiscounts2}](https://gta.fandom.com/wiki/${GunDiscounts2.replace(' ','_')})\n\n`
+      }
+
+      if(Titles['SALVAGE YARD ROBBERIES'] != 'empty'){
+        let salvageYardRobberies = Titles['SALVAGE YARD ROBBERIES'].split('\n')
+        if(salvageYardRobberies[salvageYardRobberies.length-1] == ''){ salvageYardRobberies.pop()}
+        salvageoutput = []
+        salvageYardRobberies.forEach(line => {
+          car = line.split(':')[1].trim()
+          console.log(line)
+          salvageoutput.push( line.replace(`${car}`,`[${car}](https://gta.fandom.com/wiki/${makeALink(car)})`) )
+          console.log(line)
+        })
+
+        CompleteNewsMessage += `► Ограбления Утилизационного цеха:\n${salvageoutput.join('\n')}\n\n`
       }
       
       if (Object.keys(notFoundTitles).length !== 0) {
         CompleteNewsMessage += `NOT FOUND:\n\n`
         notFoundTitles.forEach((title) => {
-          CompleteNewsMessage += `► ${title.key}:\n${title.value.replaceAll('-','─')}`
+          CompleteNewsMessage += `► ${title.key}:\n${title.value}\n`
         })
       }
+      CompleteNewsMessage = CompleteNewsMessage.replaceAll('- ','─ ')
     
       fs.writeFile('1Storage/OriginalNews.txt', messageContent, (err) => {
         if (err) {

@@ -1,15 +1,18 @@
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder, User } = require("discord.js");
 const fs = require('fs/promises');  // Використовуємо fs/promises для асинхронного читання файлів
 require("dotenv/config");
+
+let editMessageId = null;
 
 module.exports = {
   async execute(interaction, client, guild) {
     try {
-      await interaction.deferReply({});
+      await interaction.deferReply({ ephemeral: true });
 
       // Getting user and amount from options
       const userOption = interaction.options.getUser('user');
       const amount = interaction.options.get('amount').value;
+      let isNewSessionOption = interaction.options.getBoolean('isnewsession')
 
       let output = '';
 
@@ -18,6 +21,10 @@ module.exports = {
 
       // Parse JSON data and convert it to a Map
       let expCounts = new Map(Object.entries(JSON.parse(data)));
+
+      if(editMessageId == null){ isNewSessionOption = true }
+
+      if(isNewSessionOption){ expCounts.clear() }
 
       if (expCounts.has(userOption.id)) {
         // Update user's experience
@@ -36,10 +43,18 @@ module.exports = {
       // Making embed reply
       const roleEmbed = new EmbedBuilder()
         .setColor(0xE8D144)
-        .setDescription(output);
+        .setDescription(output)
+        .setImage('https://media.tenor.com/3HFKgdT-FiQAAAAi/line-rainbow.gif')
 
-      // Editing sent message with new embed
-      interaction.editReply({ embeds: [roleEmbed] });
+      if (isNewSessionOption) {
+        const sentMessage = await interaction.channel.send({ embeds: [roleEmbed], ephemeral: false });
+        editMessageId = sentMessage.id;
+        await interaction.editReply({ content: `Created new list, succesfully added ${amount} XP to ${userOption}.`})
+      } else {
+        const editMessage = await interaction.channel.messages.fetch(editMessageId);
+        await editMessage.edit({ embeds: [roleEmbed] });
+        await interaction.followUp({ content: `Succesfully added ${amount} XP to ${userOption}.`, ephemeral: true});
+      }
 
       // Writing the updated expCounts back to the file
       try {
