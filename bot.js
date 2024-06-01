@@ -79,10 +79,8 @@ client.on('interactionCreate', async(interaction) => {
 
   if (interaction.commandName === 'temprole'){
     const checkCommand = require(commandsPath + '/temprole.js');
-    checkCommand.execute(interaction, client, guild);
+    await checkCommand.execute(interaction, client, interaction.channelId);
     logCommandExecution(client, interaction.commandName, interaction.user, 'Successfully');
-
-    checkForChampions(client, interaction.channelId)
   }
 
   if (interaction.commandName === 'temproleslist'){
@@ -140,13 +138,18 @@ client.on('interactionCreate', async(interaction) => {
   }
 })
 
-schedule.scheduleJob('0 0 * * *', function(){
-  const consoleChannel = client.channels.fetch('729263612874588160');
-  try{checkRoleslist(client);}
+schedule.scheduleJob('0 0 /3', function(){
+  const logChannel = client.channels.fetch('1128424838692880464');
+  logChannel.send({files: './1Storage/roleslist.json'})
+})
+
+schedule.scheduleJob('0 0 * * *', async function(){
+  const consoleChannel = client.channels.fetch('1128424838692880464');
+  try{await checkRoleslist(client);}
   catch{consoleChannel.send(`<@163547278882111488> Something wrong with CheckRolesList function`)}
-  try{checkForChampions(client, '1128424838692880464');}
+  try{await checkForChampions(client, '1128424838692880464');}
   catch{consoleChannel.send(`<@163547278882111488> Something wrong with CheckForChampions function`)}
-  try{checkForUnregisteredRoles(client)}
+  try{await checkForUnregisteredRoles(client)}
   catch{consoleChannel.send(`<@163547278882111488> Something wrong with CheckForUnregistered function`)}
 })
 

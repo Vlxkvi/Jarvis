@@ -5,7 +5,7 @@ async function logCommandExecution(client, commandName, user, resultText) {
 
   const commandEmbed = new EmbedBuilder()
     .setColor(0x9caef2)
-    .setDescription(`<@${user.id}> used **${commandName}** command. ` + resultText)
+    .setDescription(`<@${user.id}> used **${commandName}** command. `)
     .setTimestamp()
 
   await logChannel.send({ embeds: [commandEmbed] });

@@ -1,9 +1,11 @@
 const { EmbedBuilder} = require("discord.js");
 const fs = require('fs').promises; 
+const { checkForChampions } = require("../functions/checkForChampions.js");
+const { addChampion } = require("./functions/checkForChampions.js");
 require("dotenv/config");
 
 module.exports = {
-  async execute(interaction, client, guild) {
+  async execute(interaction, client, interactionChannel) {
     const usingTime = Math.floor(Date.now() / 1000);
     await interaction.deferReply({})
     try {
@@ -48,6 +50,9 @@ module.exports = {
         keyToPush = `${user.id}-${roleOption.id}`
 
         let notFoundRolesArray = NotFoundRoles(user, eventRoles)
+        if(notFoundRolesArray.length == 0){
+          //addChampion()
+        }
 
         // If user doesn't have specified role
         if ( notFoundRolesArray.includes(roleOption.id) || !eventRoles.includes(roleOption.id)){
@@ -160,6 +165,8 @@ module.exports = {
 
       // Editing sent message with new embed
       interaction.editReply({ embeds: [roleEmbed] });
+
+      //checkForChampions(client, interactionChannel)
       
     } catch (error) {
       console.log(error)

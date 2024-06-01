@@ -4,7 +4,7 @@ const fs = require('fs').promises;
 async function checkForUnregisteredRoles(client, logID) {
     try {
         const usingTime = Math.floor(Date.now() / 1000);
-        const roles = ['841224405873852418', '839921943997186059', '886512881464639539', '839921953111670784', '841692259970711584', '971450698539618354', '860929131347705887', '884091649674846238', '971450704197722192', '839921953896792105'];
+        const roles = ['841224405873852418', '839921943997186059', '886512881464639539', '839921953111670784', '841692259970711584', '971450698539618354', '860929131347705887', '884091649674846238', '971450704197722192', '839921953896792105', '841224409778880512'];
         const guild = client.guilds.cache.get(process.env.GUILD_ID);
         const logChannel = await client.channels.fetch('1128424838692880464');
         let output = ''
@@ -27,7 +27,7 @@ async function checkForUnregisteredRoles(client, logID) {
 
                 const indexToFind = RolesList.findIndex(entry => Object.keys(entry)[0] === keyToCheck);   
                 if (indexToFind == -1) {
-                    // Add to Json  
+                    // Add to Json
                     RolesList.push({
                         [keyToCheck]: usingTime,
                     });

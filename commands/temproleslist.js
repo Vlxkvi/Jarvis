@@ -16,6 +16,7 @@ module.exports = {
         // Reading roleslist.json
         const data = await fs.readFile('1Storage/roleslist.json', 'utf8');
         RolesList = JSON.parse(data);
+        
       } catch (err) {
         console.error('Error reading roleslist.json:', err);
       }
@@ -41,25 +42,37 @@ module.exports = {
             roles[usingTime][role] = [];
           }
 
-          roles[usingTime][role].push(user);
+          if (!roles[usingTime][role].includes(user)) {
+            roles[usingTime][role].push(user);
+          }
         });
 
+        let previousTimeStamp = 0
         for (const timestamp in roles) {
           let usersWithRole = '';
           for (const role in roles[timestamp]) {
             const formattedRole = `<@&${role}>`;
+
             const formattedUsers = roles[timestamp][role].map(user => `<@${user}>`).join(' ');
+            
             usersWithRole += `${formattedRole}: ${formattedUsers}\n`;
           }
 
           const formattedTime = `<t:${timestamp}:f> (<t:${timestamp}:R>)`;
-          if (output.length < 1900) {
-            output += `${formattedTime}\n${usersWithRole}\n`;
-          } else if (output2.length < 1900) {
-            output2 += `${formattedTime}\n${usersWithRole}\n`;
-          } else if (output3.length < 1900) {
-            output3 += `${formattedTime}\n${usersWithRole}\n`;
+          let formattedPart = ``
+          if(Math.abs(previousTimeStamp-timestamp) > 3600){
+            formattedPart += `\n${formattedTime}\n` 
           }
+          formattedPart += `${usersWithRole}`
+
+          if (output.length < 1900) {
+            output += formattedPart;
+          } else if (output2.length < 1900) {
+            output2 += formattedPart;
+          } else if (output3.length < 1900) {
+            output3 += formattedPart;
+          }
+          previousTimeStamp = timestamp
         }
       }
 

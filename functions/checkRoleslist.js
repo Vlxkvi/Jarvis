@@ -28,14 +28,18 @@ async function checkRoleslist(client) {
                 let parts = key.split("-");
                 userId = parts[0];
                 roleId = parts[1];
-
+                
                 if (!expiredRoles[roleId]) {
                     expiredRoles[roleId] = [];
                 }
                 expiredRoles[roleId].push(userId);
             }
             else{
-              newRolesList.push(entry);
+                let parts = key.split("-");
+                userId = parts[0];
+                roleId = parts[1];
+                
+                newRolesList.push(entry);
             }
         }
 

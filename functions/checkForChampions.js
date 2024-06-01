@@ -21,38 +21,16 @@ async function checkForChampions(client, logID) {
             // For subsequent roles, keep only those who have the role
             membersWithAllRoles = membersWithAllRoles.filter(memberId => membersWithThisRole.includes(memberId));
             }
-
+            
             flag++;
         }
 
         let outputStatus = '';
         let championNumber = -1;
-      
+        
+        // for everyone who has all 10 roles
         for (const memberID of membersWithAllRoles) {
-            const member = guild.members.cache.get(memberID);
-        
-            // Checking champion role
-            for (let step = 0; step < 5; step++) {
-                if (member.roles.cache.find(role => role.id == champions[step])) {
-                    championNumber = step;
-                    break;
-                }
-            }
-        
-            // Removing 10 event roles
-            await Promise.all(roles.map(roleId => member.roles.remove(roleId)));
-        
-            // Adding champion
-            await member.roles.add(champions[championNumber + 1]);
-    
-            // Making output message
-            outputStatus += `\n\n<@${member.id}>\n**Added** <@&${champions[championNumber + 1]}>`;
-        
-            // Checking if the member had any champion role, it gets removed
-            if (championNumber != -1) {
-                await member.roles.remove(champions[championNumber]);
-                outputStatus += ` \n**Removed** <@&${champions[championNumber]}>`;
-            }
+            addChampion(memberID, championNumber, outputStatus)
         }
 
         if (outputStatus != '') {
@@ -69,6 +47,33 @@ async function checkForChampions(client, logID) {
     }
 }
 
+async function addChampion(memberID, championNumber, output){
+    const member = guild.members.cache.get(memberID);
+        
+    // Checking champion role
+    for (let step = 0; step < 5; step++) {
+        if (member.roles.cache.find(role => role.id == champions[step])) {
+            championNumber = step;
+            break;
+        }
+    }
+
+    // Removing 10 event roles
+    await Promise.all(roles.map(roleId => member.roles.remove(roleId)));
+
+    // Adding champion
+    await member.roles.add(champions[championNumber + 1]);
+
+    // Making output message
+    output += `\n\n<@${member.id}>\n**Added** <@&${champions[championNumber + 1]}>`;
+
+    // Checking if the member had any champion role, it gets removed
+    if (championNumber != -1) {
+        await member.roles.remove(champions[championNumber]);
+        output += ` \n**Removed** <@&${champions[championNumber]}>`;
+    }
+    return output
+}
 module.exports = {
-    checkForChampions
+    checkForChampions, addChampion
 };
