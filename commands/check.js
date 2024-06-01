@@ -26,17 +26,15 @@ module.exports = {
             outputChampions = outputChampions + `<@&${champions[step]}>\n`}
         }
 
-        if ( outputHaving !== '' && outputChampions !== '') { output = outputHaving + '\n **Missing roles**:\n' + outputNotHaving + '\n **Winner roles**:\n' + outputChampions}
-        else if (outputHaving !== '' && outputChampions == '') { output = outputHaving + '\n **Missing roles**:\n' + outputNotHaving }
-        else if (outputHaving == '' && outputChampions !== '') { output = '\n **Winner roles**:\n' + outputChampions }
-        else {output = `**<@${member.id}> doesn't have event roles**`}
-
-
         EventEmbed = new EmbedBuilder()
         .setColor(member.displayHexColor)
         .setAuthor({name: member.displayName, iconURL: member.displayAvatarURL(),})
-        .setDescription(output)
         .setTimestamp()
+        .addFields(
+          { name: 'Having', value: outputHaving ? outputHaving : '-', inline: true },
+          { name: 'Missing', value: outputNotHaving ? outputNotHaving : '-', inline: true },
+          { name: 'Winner roles', value: outputChampions ? outputChampions : '-', inline: true }
+        )
         .setFooter({text: member.id});
 
         interaction.editReply({embeds: [EventEmbed]})
