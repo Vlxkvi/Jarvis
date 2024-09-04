@@ -1,40 +1,38 @@
 const fs = require("fs")
 
 async function newsMessage(messageContent){
+  try{
+    const discountMap = new Map()
+    const xxMap = new Map()
+    const possibleX = [`GTA$`, `RP`, `SPEED`, `LS CAR MEET REP`]
+
     const Titles = {
-        'Something new': 'empty',
+        'SOMETHING NEW': 'empty',
         'FREE VEHICLES': 'empty',
         'NEW CONTENT': 'empty',
         'BONUS': 'empty',
         'TEST RIDES': 'empty',
-        '3X GTA$ & RP': 'empty',
-        '3X GTA$, RP & LS CAR MEET REP': 'empty',
-        '2X GTA$ & RP': 'empty',
-        '1.5X GTA$ & RP': 'empty',
-        '2X SPEED': 'empty',
-        '2X': 'empty',
-        'DISCOUNTS (50% off)': 'empty',
-        'DISCOUNTS (40% off)': 'empty',
-        'DISCOUNTS (30% off)': 'empty',
-        'DISCOUNTS (25% off)': 'empty',
-        'DISCOUNTS (20% off)': 'empty',
+        'XX': xxMap,
+        'DISCOUNTS': discountMap,
         'PREMIUM RACE & WEEKLY TRIALS': 'empty',
         'WEEKLY CHALLENGE': 'empty',
         'SALVAGE YARD ROBBERIES': 'empty',
         'GUN VAN PRIMARY DISCOUNTS': 'empty',
+        'PREMIUM RACE & TRIALS': 'empty',
       };
       const lines = messageContent.split("\n");
       let notFoundTitles = [];
       let linesCount = 0;
       
       if(lines[1] == ``){
-        lines[1] = '### Something new'
+        lines[1] = '### SOMETHING NEW'
       }
 
+      let flagOfFounding = false
       // Checking all the lines if they are titles
       lines.forEach((line) => {
         if (line.startsWith('#')) {
-          let title = line.replaceAll('#', '').replaceAll(`*`,``).trim()
+          let title = line.replaceAll('#', '').replaceAll(`*`,``).trim().toUpperCase()
           
           // Checking if the title exist as key is in the "Titles" dictionary     
           let discountGroup = '';
@@ -48,19 +46,29 @@ async function newsMessage(messageContent){
             testingLinesCount++;
             testingLine = lines[testingLinesCount]
           }
-          if(title in Titles){
-            Titles[title] = discountGroup
-          } else {
+          
+          if(title in Titles || title.startsWith('DISCOUNTS')){
+            Titles[title] = discountGroup.trim()
+            flagOfFounding = true
+          }
+          if(title.startsWith('DISCOUNTS')){
+            discountMap.set(title,discountGroup.trim())
+            flagOfFounding = true
+          }
+          if(possibleX.some(part => title.includes(part))){
+            xxMap.set(title,discountGroup.trim())
+            flagOfFounding = true
+          }
+          if(!flagOfFounding) {
             notFoundTitles.push({
               key: title,
               value: discountGroup
             })
           }
-          
         }
         linesCount++ ;
       });
-    
+      
       let CompleteNewsMessage = '';
       let ErrorsList = ``
     
@@ -100,7 +108,9 @@ async function newsMessage(messageContent){
         ChallangeAutoClub = ChallangeAutoClub
           .replace("Place Top ", "Займите Топ-")
           .replace("in the LS Car Meet Series", "в гонках серии Автоклуба ЛС")
-          .replace("days in a row", "дня подряд");
+          .replace("days in a row", "дня подряд")
+          .replace("for ", "")
+          .replace("Win", "Победите")
           
         CompleteNewsMessage += `► Испытание:\n${ChallangeAutoClub}\n\n`
       }
@@ -110,17 +120,17 @@ async function newsMessage(messageContent){
 
       // Working with Weekly challenge
       if(Titles['WEEKLY CHALLENGE'] != 'empty'){
-        CompleteNewsMessage += `► Недельное испытание:\n${Titles['WEEKLY CHALLENGE']}\n`
+        CompleteNewsMessage += `► Недельное испытание:\n${Titles['WEEKLY CHALLENGE']}\n\n`
       }
       
-      // Working with something new
-      if(Titles['Something new'] != 'empty'){
-        CompleteNewsMessage += `► Что-то новенькое:\n${Titles['Something new']}\n`
+      // Working with SOMETHING NEW
+      if(Titles['SOMETHING NEW'] != 'empty'){
+        CompleteNewsMessage += `► Что-то новенькое:\n${Titles['SOMETHING NEW']}\n\n`
       }
     
       // Working with New Content
       if(Titles['NEW CONTENT'] != 'empty'){
-        CompleteNewsMessage += `► Новый контент:\n${Titles['NEW CONTENT']}\n`
+        CompleteNewsMessage += `► Новый контент:\n${Titles['NEW CONTENT']}\n\n`
       }
       
       // Working with Bonus
@@ -156,7 +166,7 @@ async function newsMessage(messageContent){
       // Working with Test Rides (Test Track (LS Car Meet))
       let TestTrack = content[2]
         .replaceAll('*','')
-        .replace('- Test Track (LS Car Meet): ','')
+        .replace('- Test Track: ','')
       let TestTrackCars = TestTrack.split(/[,&]+/)
       let completeTestTrack = '';
       TestTrackCars.forEach((line) => {
@@ -172,59 +182,34 @@ async function newsMessage(messageContent){
       CompleteNewsMessage += `► Тестовая машина HSW:\n${completeTestRideHSW}\n\n`
     
       // Working with ..X Bonuses
-      if(Titles['3X GTA$ & RP'] != 'empty'){
-        CompleteNewsMessage += `► 3X GTA$, RP:\n${Titles['3X GTA$ & RP'].replaceAll('- ','─ ')}\n` 
+      if(xxMap.size != 0){
+        xxMap.forEach((discount, title) => {
+          CompleteNewsMessage += `► ${title}:\n${discount}\n\n` 
+        })
       }
-      if(Titles['3X GTA$, RP & LS CAR MEET REP'] != 'empty'){ 
-        CompleteNewsMessage += `► Х3 GTA$, RP, Опыт автоклуба:\n${Titles['3X GTA$, RP & LS CAR MEET REP'].replaceAll('- ','─ ')}\n` 
-      }
-      if(Titles['2X GTA$ & RP'] != 'empty'){ 
-        CompleteNewsMessage += `► 2X GTA$, RP:\n${Titles['2X GTA$ & RP'].replaceAll('- ','─ ')}\n` 
-      }
-      if(Titles['1.5X GTA$ & RP'] != 'empty'){ 
-        CompleteNewsMessage += `► 1.5X GTA$, RP:\n${Titles['1.5X GTA$ & RP'].replaceAll('- ','─ ')}\n`
-      }
-      if(Titles['2X SPEED'] != 'empty'){ 
-        CompleteNewsMessage += `► 2X скорость:\n${Titles['2X SPEED'].replaceAll('- ','─ ')}\n` 
-      }
-      if(Titles['2X'] != 'empty'){ 
-        CompleteNewsMessage += `► 2X :\n${Titles['2X'].replaceAll('- ','─ ')}\n` 
-      }
-    
-      function discountMaker(title){
-        let discounts = Titles[title].slice(0, -1)
-        let completeDiscounts = '';
-        discounts = discounts.split('\n')
-        discounts.forEach((line => {
-          completeDiscounts += `─ [${line.replaceAll('- ','')}](https://gta.fandom.com/wiki/${makeALink(line)})\n`
-        }))
-        return completeDiscounts
-      }
+
       // Working with discounts
-      if(Titles['DISCOUNTS (50% off)'] != 'empty'){
-        CompleteNewsMessage += `► Скидка 50% на:\n${discountMaker('DISCOUNTS (50% off)')}\n`
-      }
-      if(Titles['DISCOUNTS (40% off)'] != 'empty'){
-        CompleteNewsMessage += `► Скидка 40% на:\n${discountMaker('DISCOUNTS (40% off)')}\n`
-      }
-      if(Titles['DISCOUNTS (30% off)'] != 'empty'){
-        CompleteNewsMessage += `► Скидка 30% на:\n${discountMaker('DISCOUNTS (30% off)')}\n`
-      }
-      if(Titles['DISCOUNTS (25% off)'] != 'empty'){
-        CompleteNewsMessage += `► Скидка 25% на:\n${discountMaker('DISCOUNTS (25% off)')}\n`
-      }
-      if(Titles['DISCOUNTS (20% off)'] != 'empty'){
-        CompleteNewsMessage += `► Скидка 20% на:\n${discountMaker('DISCOUNTS (20% off)')}\n`
-      }
+      discountMap.forEach((discount, title) => {
+        const regex = /\d+/;
+        const match = title.match(regex)
+        if(match){
+          CompleteNewsMessage += `► Скидка ${match[0]}% на:\n${discountMaker(discount, false)}\n`
+        }
+      })
 
       if(Titles[`GUN VAN PRIMARY DISCOUNTS`] != 'empty'){
-        let GunDiscountsLines = Titles['GUN VAN PRIMARY DISCOUNTS'].split('\n')
-        let discountForGun1 = GunDiscountsLines[0].split(':')[0].trim().replace('OFF','')
-        let GunDiscounts1 = GunDiscountsLines[0].split(':')[1].trim()
-        let discountForGun2 = GunDiscountsLines[1].split(':')[0].trim().replace('OFF for GTA+ Members','для игроков с подпиской GTA+ ')
-        let GunDiscounts2 = GunDiscountsLines[1].split(':')[1].trim()
+        try{
+          let GunDiscountsLines = Titles['GUN VAN PRIMARY DISCOUNTS'].split('\n')
+          let discountForGun1 = GunDiscountsLines[0].split(':')[0].trim().replace('OFF','')
+          let GunDiscounts1 = GunDiscountsLines[0].split(':')[1].trim()
+          let discountForGun2 = GunDiscountsLines[1].split(':')[0].trim().replace('OFF for GTA+ Members','для игроков с подпиской GTA+ ')
+          let GunDiscounts2 = GunDiscountsLines[1].split(':')[1].trim()
 
-        CompleteNewsMessage += `► Скидки в оружейном фургоне:\n${discountForGun1}: [${GunDiscounts1}](https://gta.fandom.com/wiki/${GunDiscounts1.replace(' ','_')})\n${discountForGun2}: [${GunDiscounts2}](https://gta.fandom.com/wiki/${GunDiscounts2.replace(' ','_')})\n\n`
+          CompleteNewsMessage += `► Скидки в оружейном фургоне:\n${discountForGun1}: [${GunDiscounts1}](https://gta.fandom.com/wiki/${GunDiscounts1.replace(' ','_')})\n${discountForGun2}: [${GunDiscounts2}](https://gta.fandom.com/wiki/${GunDiscounts2.replace(' ','_')})\n\n`
+        }
+        catch(error){
+          CompleteNewsMessage += `► Скидки в оружейном фургоне:\n${Titles['GUN VAN PRIMARY DISCOUNTS']}\n\n`
+        }
       }
 
       if(Titles['SALVAGE YARD ROBBERIES'] != 'empty'){
@@ -265,8 +250,11 @@ async function newsMessage(messageContent){
             return;
         }
       })
-      console.log(CompleteNewsMessage)
       return CompleteNewsMessage;
+  }
+  catch(error){
+    return error
+  }
 }
 
 module.exports = {
@@ -280,4 +268,14 @@ function makeALink(line){
     words.shift()
     model = words.join('_')
     return model;
+}
+    
+function discountMaker(discount, fullTextOrPart){
+  let discounts = discount.split('\n')
+  let completeDiscounts = ``
+  discounts.forEach((line => {
+    line = line.replaceAll('- ','')
+    completeDiscounts += `─ [${line}](https://gta.fandom.com/wiki/${fullTextOrPart ? line : makeALink(line)})\n`
+  }))
+  return completeDiscounts
 }

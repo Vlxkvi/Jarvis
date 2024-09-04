@@ -28,7 +28,7 @@ const commands = [
         ]
     },
     {
-        name: 'up-champ',
+        name: 'upchamp',
         description: 'Adding next Champion',
         options: [
             {
@@ -45,7 +45,7 @@ const commands = [
     },
     {
         name: 'temprole',
-        description: 'Adding temporary role to one or more users',
+        description: 'adding temporary role to one or more users',
         options: [
             {
                 name: 'role',
@@ -84,34 +84,6 @@ const commands = [
                 required: false,
             },
         ]
-    },
-    {
-        name: 'event',
-        description: 'Registration for the event',
-        options: [
-            {
-                name: 'description',
-                description: 'Description of your event. Main text',
-                type: ApplicationCommandOptionType.String,
-                required: true,
-            },
-            {
-                name: 'social-club-nickname',
-                description: 'Social Club nickname for profile link',
-                type: ApplicationCommandOptionType.String,
-                required: true,
-            },
-            {
-                name: 'need-embed',
-                description: 'Description of your event. Main text',
-                type: ApplicationCommandOptionType.Boolean,
-                required: true,
-            }
-        ]
-    },
-    {
-        name: 'eventlist',
-        description: 'Проверяет роли за ивенты',
     },
     {
         name: 'temproleslist',
@@ -160,12 +132,18 @@ const commands = [
                 description: 'message that bot will send',
                 type: ApplicationCommandOptionType.String,
                 required: true,
+            },
+            {
+                name: 'reply',
+                description: 'message to which bot will reply',
+                type: ApplicationCommandOptionType.String,
+                required: false,
             }
         ],
     },
     {
         name: 'removerole',
-        description: 'Remove role you\'ve given incorrectly',
+        description: 'remove role you\'ve given incorrectly',
         options: [
             {
                 name: 'role',
@@ -226,20 +204,84 @@ const commands = [
         description: 'clears counting list'
     },
     {
-        name: 'play',
-        description: 'Воспроизведение музыки в голосовом канале.',
+        name: 'eventgtapc',
+        description: 'gives or removes all needed roles for an eventer',
         options: [
             {
-                name: 'query',
-                description: 'Укажите ссылку на трек, чтобы бот добавил его в очередь воспроизведения.',
-                type: ApplicationCommandOptionType.String,
+                name: 'user',
+                description: 'user',
+                type: ApplicationCommandOptionType.User,
                 required: true,
             }
         ]
     },
     {
-        name: 'skip',
-        description: 'Пропуск текущего трека и переход к следующему в очереди воспроизведения.',
+        name: 'cleanracer',
+        description: 'gives clean racer role',
+        options: [
+            {
+                name: 'user',
+                description: 'user',
+                type: ApplicationCommandOptionType.User,
+                required: true,
+            }
+        ]
+    },
+    {
+        name: 'eventban',
+        description: 'gives event ban role for specific time or permanently if time is not given',
+        options: [
+            {
+                name: 'user',
+                description: 'user',
+                type: ApplicationCommandOptionType.User,
+                required: true,
+            },
+            {
+                name: 'time',
+                description: '1 year or permanent',
+                type: ApplicationCommandOptionType.Integer,
+                choices: [
+                    {
+                        name: '1 year',
+                        value: 1
+                    },
+                    {
+                        name: 'permanent',
+                        value: 0
+                    }
+                ],
+                required: true,
+            }
+        ]
+    },
+    {
+        name: 'expban',
+        description: 'gives exp ban role for specific time',
+        options: [
+            {
+                name: 'user',
+                description: 'user',
+                type: ApplicationCommandOptionType.User,
+                required: true,
+            },
+            {
+                name: 'time',
+                description: '1 year or permanent',
+                type: ApplicationCommandOptionType.Integer,
+                choices: [
+                    {
+                        name: '1 year',
+                        value: 1
+                    },
+                    {
+                        name: 'permanent',
+                        value: 0
+                    }
+                ],
+                required: true,
+            }
+        ]
     }
 ];
 

@@ -1,4 +1,5 @@
 const { EmbedBuilder } = require("discord.js");
+const { eventRoles } = require("../oftenused.js")
 require("dotenv/config");
 
 module.exports = {
@@ -6,11 +7,9 @@ module.exports = {
     try {
       await interaction.deferReply({});
       
-      const roles = ['841224405873852418', '839921943997186059', '886512881464639539', '839921953111670784', '841692259970711584', '971450698539618354', '860929131347705887', '884091649674846238', '971450704197722192', '839921953896792105'];
-
       let output = '';
 
-      for (let roleId of roles) {
+      for (let roleId of eventRoles) {
         let role = await interaction.guild.roles.fetch(roleId);
         let count = role.members.size;
 

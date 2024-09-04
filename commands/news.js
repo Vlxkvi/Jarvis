@@ -22,8 +22,8 @@ module.exports = {
         .setFooter({ text: '*нажав на название машины, вы перейдёте на её страницу в интернете', iconURL: 'https://c.tenor.com/ulin4ZJ8QcYAAAAi/la-gringa-la-sole.gif'});
       interaction.reply({ embeds: [newsEmbed], files: ['1Storage/OriginalNews.txt','1Storage/News.txt']});
             
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.log(err);
       interaction.reply({ content: `Seems you're trying to load message which is not from <#795155910153469952> or we have some other error. Anyway tell that to <@163547278882111488> if you have this problem few times\n\nError:\n${error.message}`, ephemeral: true });
       }
   },

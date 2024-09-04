@@ -1,30 +1,45 @@
 const fs = require('fs').promises;
 const { EmbedBuilder } = require("discord.js");
+require("dotenv/config")
 
-async function checkRoleslist(client) {
+async function checkRoleslist(path, client) {
     try {
+        console.log('started')
         const currentTime = Math.floor(Date.now() / 1000);
 
         // Read roleslist.json
-        const data = await fs.readFile('1Storage/roleslist.json', 'utf8');
+        const data = await fs.readFile(path, 'utf8');
         const rolesList = JSON.parse(data);
-        const guild = client.guilds.cache.get(process.env.GUILD_ID);
+        const guild = await client.guilds.cache.get(process.env.GUILD_ID);
 
         let newRolesList = [];
         let expiredRoles = {};
         let userId
         let roleId
-        const keepingTime = 30 * 24 * 60 * 60;
+        let keepingTime
+
+        switch (path) {
+            case '1Storage/roleslist.json':
+                keepingTime = 30 * 24 * 60 * 60;
+                console.log(`roleslist`)       
+                break;    
+            case '1Storage/banroleslist.json':
+                keepingTime = 12 * 30 * 24 * 60 * 60;  
+                console.log(`banroleslist`)       
+                break;      
+        }
+        console.log(keepingTime)
+        if(path == '1Storage/roleslist.json'){
+
+        }
         
         for (let entry of rolesList) {
             let key = Object.keys(entry)[0];
             let entryTime = parseInt(entry[key]);
             let timeDifference = currentTime - entryTime;
 
-            // Time to keep role - 30 days
-
             if (timeDifference > keepingTime) {
-
+                console.log(`need to remove role`)
                 let parts = key.split("-");
                 userId = parts[0];
                 roleId = parts[1];
@@ -35,6 +50,7 @@ async function checkRoleslist(client) {
                 expiredRoles[roleId].push(userId);
             }
             else{
+                console.log(`no need`)
                 let parts = key.split("-");
                 userId = parts[0];
                 roleId = parts[1];
