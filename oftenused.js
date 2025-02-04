@@ -5,6 +5,7 @@ const champions = ['1097200827485130792', '1097200822196109534', '10972008112951
 const successColor = 0xa1f60d
 const failColor = 0xee1053
 const midColor = 0xe8d144
+const mainColor = 0x9caef2
 
 function readJSON(filePath) {
     let RolesList;
@@ -31,4 +32,4 @@ function writeJSON(dataToWrite, filePath) {
       }
 }
 
-module.exports = { eventRoles, champions, successColor, failColor, midColor, readJSON, writeJSON };
+module.exports = { eventRoles, champions, successColor, failColor, midColor, successColor, mainColor, readJSON, writeJSON };

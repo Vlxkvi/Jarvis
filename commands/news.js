@@ -14,13 +14,8 @@ module.exports = {
       const cachedMessage = await channel.messages.fetch(messageId);
       
       CompleteNewsMessage = await newsMessage(cachedMessage.content)
-
-      const newsEmbed = new EmbedBuilder()
-        .setColor(0xff0000)
-        .setDescription(CompleteNewsMessage)
-        .setThumbnail('https://c.tenor.com/5c9rqMKtDeEAAAAi/stickergiant-sale.gif')
-        .setFooter({ text: '*нажав на название машины, вы перейдёте на её страницу в интернете', iconURL: 'https://c.tenor.com/ulin4ZJ8QcYAAAAi/la-gringa-la-sole.gif'});
-      interaction.reply({ embeds: [newsEmbed], files: ['1Storage/OriginalNews.txt','1Storage/News.txt']});
+      
+      interaction.reply({ files: ['1Storage/OriginalNews.txt','1Storage/News.txt']})
             
     } catch (err) {
       console.log(err);

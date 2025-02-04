@@ -1,5 +1,5 @@
 const { EmbedBuilder } = require("discord.js")
-const { eventRoles, champions } = require("../oftenused.js")
+const { eventRoles, champions, mainColor } = require("../oftenused.js")
 require("dotenv/config")
 
 module.exports = {

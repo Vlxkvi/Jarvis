@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require("discord.js");
 const fs = require('fs').promises;
+const { mainColor, successColor } = require("../oftenused.js")
 require("dotenv/config");
 
 module.exports = {
@@ -15,7 +16,7 @@ module.exports = {
 
       // Making embed reply
       const roleEmbed = new EmbedBuilder()
-        .setColor(0xE8D144)
+        .setColor(successColor)
         .setDescription('Cleared!');
 
       // Editing sent message with new embed and attached file

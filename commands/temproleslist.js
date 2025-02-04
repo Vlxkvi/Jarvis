@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require("discord.js");
 const fs = require('fs').promises; 
+const { mainColor } = require("../oftenused.js")
 require("dotenv/config");
 
 module.exports = {
@@ -80,20 +81,20 @@ module.exports = {
 
       let temprolesEmbed1 = new EmbedBuilder()
         .setTitle('Current roles:')
-        .setColor(0x9caef2)
+        .setColor(mainColor)
         .setDescription(output);
       embedsToSend.push(temprolesEmbed1)
 
       if (output2) {
         let temprolesEmbed2 = new EmbedBuilder()
-          .setColor(0x9caef2)
+          .setColor(mainColor)
           .setDescription(output2);
         embedsToSend.push(temprolesEmbed2)
       }
 
       if (output3) {
         let temprolesEmbed3 = new EmbedBuilder()
-          .setColor(0x9caef2)
+          .setColor(mainColor)
           .setDescription(output3);
         embedsToSend.push(temprolesEmbed3)
       }

@@ -1,5 +1,5 @@
 const { EmbedBuilder } = require("discord.js");
-const { eventRoles } = require("../oftenused.js")
+const { eventRoles, mainColor } = require("../oftenused.js")
 require("dotenv/config");
 
 module.exports = {
@@ -7,23 +7,24 @@ module.exports = {
     try {
       await interaction.deferReply({});
       
+      const roleData = await Promise.all(
+        eventRoles.map(async (roleId) => {
+          const role = await interaction.guild.roles.fetch(roleId);
+          const count = role.members.size;
+          return { id: role.id, name: role.name, count };
+        })
+      );
+
+      roleData.sort((a, b) => a.count - b.count);
+
       let output = '';
-
-      for (let roleId of eventRoles) {
-        let role = await interaction.guild.roles.fetch(roleId);
-        let count = role.members.size;
-
-        if (count.toString().length < 2) {
-          output += '`0' + count + '`';
-        } else {
-          output += '`' + count + '`';
-        }
-        output += ` <@&${role.id}>\n`;
-      }
-
+      roleData.forEach(({ count, id }) => {
+        output += `\` ${count.toString().padStart(2, '0')} \` <@&${id}>\n`;
+      });
+      
       const roleEmbed = new EmbedBuilder()
         .setTitle('Event roles list')
-        .setColor(0x9caef2)
+        .setColor(mainColor)
         .setDescription(output)
         .setTimestamp()
         .setFooter({ text: 'Jar𝕧is' });

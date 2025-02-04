@@ -1,5 +1,6 @@
 const { EmbedBuilder, Permissions, roleMention } = require("discord.js");
 const fs = require('fs').promises; 
+const { mainColor, midColor, successColor } = require("../oftenused.js")
 require("dotenv/config");
 
 module.exports = {
@@ -7,7 +8,7 @@ module.exports = {
     const usingTime = Math.floor(Date.now() / 1000);
     try {
       await interaction.deferReply({});
-      let color = 0xE8D144;
+      let color = midColor;
       // Getting role and users from options
       const roleOption = interaction.options.getRole('role');
       const userOption = interaction.options.getUser('user');
@@ -41,7 +42,7 @@ module.exports = {
           // Deleting from rolesList
           rolesList.splice(indexToDelete, 1);
           output = `Role ${roleOption} was removed from ${userOption}`;
-          color = 0xB1F73E
+          color = successColor
         } else {
           output = `Role ${roleOption} was given ${userOption} more than 10 minutes ago.\nAsk <@&760197563205943308> or <@&713451470648770583>`;
         }

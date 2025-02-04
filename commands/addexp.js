@@ -1,5 +1,6 @@
 const { EmbedBuilder, User } = require("discord.js");
 const fs = require('fs/promises');  // Використовуємо fs/promises для асинхронного читання файлів
+const { mainColor } = require("../oftenused.js")
 require("dotenv/config");
 
 let editMessageId = null;
@@ -42,7 +43,7 @@ module.exports = {
 
       // Making embed reply
       const roleEmbed = new EmbedBuilder()
-        .setColor(0xE8D144)
+        .setColor(mainColor)
         .setDescription(output)
         .setImage('https://media.tenor.com/3HFKgdT-FiQAAAAi/line-rainbow.gif')
 

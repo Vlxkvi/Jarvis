@@ -19,6 +19,7 @@ async function newsMessage(messageContent){
         'SALVAGE YARD ROBBERIES': 'empty',
         'GUN VAN PRIMARY DISCOUNTS': 'empty',
         'PREMIUM RACE & TRIALS': 'empty',
+        'FIB PRIORITY FILE': 'empty',
       };
       const lines = messageContent.split("\n");
       let notFoundTitles = [];
@@ -28,7 +29,6 @@ async function newsMessage(messageContent){
         lines[1] = '### SOMETHING NEW'
       }
 
-      let flagOfFounding = false
       // Checking all the lines if they are titles
       lines.forEach((line) => {
         if (line.startsWith('#')) {
@@ -47,19 +47,16 @@ async function newsMessage(messageContent){
             testingLine = lines[testingLinesCount]
           }
           
-          if(title in Titles || title.startsWith('DISCOUNTS')){
+          if(title in Titles){
             Titles[title] = discountGroup.trim()
-            flagOfFounding = true
           }
-          if(title.startsWith('DISCOUNTS')){
+          else if(title.startsWith('DISCOUNTS')){
             discountMap.set(title,discountGroup.trim())
-            flagOfFounding = true
           }
-          if(possibleX.some(part => title.includes(part))){
+          else if(possibleX.some(part => title.includes(part))){
             xxMap.set(title,discountGroup.trim())
-            flagOfFounding = true
           }
-          if(!flagOfFounding) {
+          else {
             notFoundTitles.push({
               key: title,
               value: discountGroup
@@ -107,10 +104,15 @@ async function newsMessage(messageContent){
         
         ChallangeAutoClub = ChallangeAutoClub
           .replace("Place Top ", "Займите Топ-")
-          .replace("in the LS Car Meet Series", "в гонках серии Автоклуба ЛС")
+          .replace("Win", "Победите")
+          .replace("the LS Car Meet Series", "в гонках серии Автоклуба ЛС")
           .replace("days in a row", "дня подряд")
           .replace("for ", "")
-          .replace("Win", "Победите")
+          .replace("in ", "")
+          .replace('two', '2')
+          .replace('three', '3')
+          .replace('four', '4')
+          .replace('five', '5')
           
         CompleteNewsMessage += `► Испытание:\n${ChallangeAutoClub}\n\n`
       }
@@ -217,18 +219,26 @@ async function newsMessage(messageContent){
         if(salvageYardRobberies[salvageYardRobberies.length-1] == ''){ salvageYardRobberies.pop()}
         salvageoutput = []
         salvageYardRobberies.forEach(line => {
-          const carInfo = line.split(':')[1];
+          const carInfo = line.split(':')[1].split('(')[0].trim()
           if (carInfo !== undefined) {
-            const car = carInfo.trim();
-            salvageoutput.push(line.replace(`${car}`, `[${car}](https://gta.fandom.com/wiki/${makeALink(car)})`));
+            salvageoutput.push(line.replace(`${carInfo}`, `[${carInfo}](https://gta.fandom.com/wiki/${makeALink(carInfo)})`));
           } else {
             console.log('Car info is undefined');
           }
-      });
+        });
 
         CompleteNewsMessage += `► Ограбления Утилизационного цеха:\n${salvageoutput.join('\n')}\n\n`
       }
-      
+
+      if (Titles['FIB PRIORITY FILE'] != 'empty') {
+        let FIBPriorityFile = Titles['FIB PRIORITY FILE'];
+        if (FIBPriorityFile.includes('[')) {
+          console.log('yo x2');
+          FIBPriorityFile = FIBPriorityFile.split(']')[0].replace('[', '');
+        } 
+        CompleteNewsMessage += `► Приоритетный файл FIB:\n${FIBPriorityFile}\n\n`;
+      }
+
       if (Object.keys(notFoundTitles).length !== 0) {
         CompleteNewsMessage += `NOT FOUND:\n\n`
         notFoundTitles.forEach((title) => {

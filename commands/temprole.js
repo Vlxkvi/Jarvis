@@ -1,7 +1,7 @@
 const { EmbedBuilder } = require("discord.js");
 const fs = require('fs');
 const { addChampion } = require("../functions/checkForChampions.js");
-const { eventRoles } = require("../oftenused.js");
+const { eventRoles, successColor } = require("../oftenused.js");
 require("dotenv/config");
 
 // Function returning array of missing roles
@@ -28,6 +28,7 @@ module.exports = {
       const userOption4 = interaction.options.getUser('user4');
       const userOption5 = interaction.options.getUser('user5');
 
+
       // Creating variables of options
       const user1 = interaction.guild.members.cache.get(userOption1.id);
       const user2 = userOption2 ? interaction.guild.members.cache.get(userOption2.id) : null;
@@ -35,12 +36,12 @@ module.exports = {
       const user4 = userOption4 ? interaction.guild.members.cache.get(userOption4.id) : null;
       const user5 = userOption5 ? interaction.guild.members.cache.get(userOption5.id) : null;
       let users = [user1, user2, user3, user4, user5]
-
+      
       let addedRightRole = []
       let addedAnotherRole = []
-      let outputUsersToCopy = ''
-      let outputRolesToCopy = ''
       let outputGotChampion = ``
+      let output = ``
+      let reportToCopy = ``
 
       let RolesList = [];
       try {
@@ -51,8 +52,7 @@ module.exports = {
         // Catching error
         console.log('Error reading roleslist.json:', err);
       }
-      console.log(typeof(RolesList))
-
+      
       for (const user of users) {
         if (!user) { continue; }
         let keyToPush = `${user.id}-${roleOption.id}`
@@ -61,7 +61,7 @@ module.exports = {
         }
 
         let notFoundRolesArray = NotFoundRoles(user, eventRoles)
-
+      
         // if roleOption is not an event role
         if( !eventRoles.includes(roleOption.id) ){
           // if user has all 10 event roles
@@ -150,34 +150,27 @@ module.exports = {
           }
         }
       }
-
-      let output = ''
-
+      
+      
       // Users who got specified role
       if (addedRightRole.length != 0) {
-        outputUsersToCopy += `1. `
-        outputRolesToCopy += `2. `
         output += `Role ${roleOption} added to: `
+        reportToCopy += `${roleOption}:\n`
         for (let i = 0; i < addedRightRole.length; i++) {
-          output += addedRightRole[i] ? `<@${addedRightRole[i]}> ` : '';
-
-          outputRolesToCopy += `${roleOption} `
-          outputUsersToCopy += `<@${addedRightRole[i]}> `
+          output += addedRightRole[i] ? `<@${addedRightRole[i]}> ` : ''
+          reportToCopy += addedRightRole[i] ? `<@${addedRightRole[i]}> ` : ''
         }
       }
-
+      
       // Users who got other roles
       for (let objIndex = 0; objIndex < Object.keys(addedAnotherRole).length; objIndex++) {
         const object = addedAnotherRole[objIndex];
-        output += `\n Role <@&${Object.keys(object)[0]}> added to: `;
+        output += `\nRole <@&${Object.keys(object)[0]}> added to: `
+        reportToCopy += `\n<@&${Object.keys(object)[0]}>:\n`
 
         for (let i = 0; i < 5; i++) {
           output += object[Object.keys(object)[0]][i] ? ` <@${object[Object.keys(object)[0]][i]}>` : '';
-          if (object[Object.keys(object)[0]][i]) {
-            outputRolesToCopy += `<@&${Object.keys(object)[0]}> `
-            outputUsersToCopy += `<@${object[Object.keys(object)[0]][i]}> `
-          }
-
+          reportToCopy += object[Object.keys(object)[0]][i] ? ` <@${object[Object.keys(object)[0]][i]}>` : ''
         }
       }
 
@@ -189,20 +182,20 @@ module.exports = {
         // If there was an error writing data to json file
         console.error('Error writing to roleslist.json:', err);
       }
-
+      
       if(addedRightRole.length != 0 || addedAnotherRole.length != 0){
-        output += `\n\`\`\`${outputUsersToCopy}\n${outputRolesToCopy}\`\`\``
+        output +=`\n\`\`\`${reportToCopy}\`\`\``
         output += outputGotChampion
       }
 
       // Making embed reply
       let roleEmbed = new EmbedBuilder()
-        .setColor(0x45f03e)
+        .setColor(successColor)
         .setDescription(output);
 
       // Editing sent message with new embed
       await interaction.editReply({ embeds: [roleEmbed] });
-
+      
     } catch (error) {
       console.log(error)
 

@@ -25,6 +25,17 @@ const client = new Client({
   ],
 })
 
+process.on('uncaughtException', async(error) => {
+  console.error(`Uncaught Exception: ${error}\n${error.stack}`);
+  const consoleChannel = await client.channels.fetch('1103310828104597534');
+  consoleChannel.send(`Uncaught Exception: ${error}\n${error.stack}`)
+});
+
+process.on('unhandledRejection', async(reason, promise) => {
+  console.error(`Unhandled Rejection at: ${promise}\nReason: ${reason}`);
+  const consoleChannel = await client.channels.fetch('1103310828104597534');
+  consoleChannel.send(`Unhandled Rejection at: ${promise}\nReason: ${reason}`)
+});
 
 client.on('messageCreate', async(message) => {
   try{
@@ -101,7 +112,7 @@ client.on('messageCreate', async(message) => {
         message.reply(`Roles were given to <@${userid}> successfully.`)
       }
       // changeMyRole
-    if(message.content.startsWith(`j.changemyrole `)){
+    if(message.content.startsWith(`j.changemyrole`)){
         let content = message.content
         let parts = content.split(`--`)
         let newname = parts[1]
@@ -115,9 +126,11 @@ client.on('messageCreate', async(message) => {
         }
 
         message.reply(`Succesfully updated your role!`)
-      
-        message.reply(`error: ${error}`)
       }
+    }
+    // React to messages with images in the forum thread with ID 1190229429956382770
+    if (message.channel.id === '1323646746462523524' && message.attachments.size > 0) {
+      message.react('<:vcYes:782950011871690793>');
     }
   }
   catch(err){

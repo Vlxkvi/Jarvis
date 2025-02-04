@@ -1,5 +1,5 @@
 const { EmbedBuilder } = require("discord.js");
-const { successColor, failColor, midColor } = require("../oftenused.js")
+const { successColor, failColor, midColor, mainColor } = require("../oftenused.js")
 require("dotenv/config");
 
 module.exports = {
@@ -18,7 +18,7 @@ module.exports = {
       if (hasRole) {
         // Notifying that user already has this role
         output = `**<@${user.id}> already has <@&1095767610622214225> role**`;
-        color = failColor.toString(16)
+        color = failColor
 
         embed.setColor(color)
         embed.setDescription(output)
@@ -27,7 +27,7 @@ module.exports = {
         flag = true
         user.roles.add(roleId); 
           
-        color = successColor.toString(16)
+        color = successColor
 
         embed.setColor(color)
         embed.addFields(

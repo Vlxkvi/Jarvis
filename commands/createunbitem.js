@@ -1,5 +1,5 @@
 const { EmbedBuilder, time } = require("discord.js");
-const { successColor, failColor, midColor } = require("../oftenused.js")
+const { successColor, failColor, midColor, mainColor } = require("../oftenused.js")
 require("dotenv/config");
 
 module.exports = {

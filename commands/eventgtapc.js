@@ -23,7 +23,7 @@ module.exports = {
             user.roles.remove(role); // Removing the role.
           }, i * 1000);
         });
-        color = failColor.toString(16)
+        color = failColor
       } else {
         // Adding
         eventRoles.forEach((role, i) => { // Looping through the members of Role.
@@ -31,7 +31,7 @@ module.exports = {
             user.roles.add(role); // Adding the role.
           }, i * 1000);
         });
-        color = successColor.toString(16)
+        color = successColor
       }
       const embed = new EmbedBuilder()
         .setColor(color)
