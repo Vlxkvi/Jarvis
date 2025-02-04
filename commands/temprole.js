@@ -16,7 +16,7 @@ function NotFoundRoles(user, rolesArray) {
 }
 
 module.exports = {
-  async execute(interaction) {
+  async execute(interaction, client) {
     const usingTime = Math.floor(Date.now() / 1000);
     await interaction.deferReply({})
     try {

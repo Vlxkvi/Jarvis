@@ -256,29 +256,25 @@ const commands = [
         ]
     },
     {
-        name: 'expban',
-        description: 'gives exp ban role for specific time',
+        name: 'createunbitem',
+        description: 'creates all unbeliava commands to create emoji item',
         options: [
             {
-                name: 'user',
-                description: 'user',
-                type: ApplicationCommandOptionType.User,
+                name: 'name',
+                description: 'name of the item',
+                type: ApplicationCommandOptionType.String,
                 required: true,
             },
             {
-                name: 'time',
-                description: '1 year or permanent',
+                name: 'emoji',
+                description: 'name of the role',
+                type: ApplicationCommandOptionType.String,
+                required: true,
+            },
+            {
+                name: 'price',
+                description: 'price of the item',
                 type: ApplicationCommandOptionType.Integer,
-                choices: [
-                    {
-                        name: '1 year',
-                        value: 1
-                    },
-                    {
-                        name: 'permanent',
-                        value: 0
-                    }
-                ],
                 required: true,
             }
         ]

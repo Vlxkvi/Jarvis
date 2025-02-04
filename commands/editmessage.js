@@ -2,7 +2,7 @@ const { EmbedBuilder, Permissions, MessageActionRow, MessageButton } = require("
 require("dotenv/config");
 
 module.exports = {
-  async execute(interaction, client, guild) {
+  async execute(interaction, client) {
     try {
       const messageId = interaction.options.getString('link');
       const cachedMessage = await interaction.channel.messages.fetch(messageId);

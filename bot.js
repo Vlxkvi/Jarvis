@@ -49,64 +49,59 @@ client.on('messageCreate', async(message) => {
         }).catch(console.error);
         message.crosspost() 
     }
-    if(message.content === "j.checkRolesList" && message.author.id == "163547278882111488"){
-      try{ checkRoleslist('1Storage/roleslist.json', client); }
-      catch(error){ 
-        message.reply(`error: ${error}`) 
-        console.log(error)
-      }
-    }
-    if(message.content === "j.checkForChampions" && message.author.id == "163547278882111488"){
-      try{ checkForChampions(client, '1128424838692880464'); }
-      catch(error){ 
-        message.reply(`error: ${error}`) 
-        console.log(error)
-      }
-    }
-    if(message.content === "j.checkForUnregisteredRoles" && message.author.id == "163547278882111488"){
-      try{ checkForUnregisteredRoles(client) }
-      catch(error){ 
-        message.reply(`error: ${error}`) 
-        console.log(error)
-      }
-    }
-    if(message.content.startsWith(`j.giveEventRoles `) && message.author.id == "163547278882111488"){
-      let content = message.content
-      let parts = content.split(` `)
-      let userid = parts[1]
+    if(message.content.startsWith(prefix) && message.author.id == "163547278882111488"){
+      switch(message.content){
+        // checkRolesList
+        case "j.checkRolesList":
+          checkRoleslist('1Storage/roleslist.json', client)
+          break
 
-      if(parts.length != 2){
-        message.reply(`Wrong structure of command.\nCorrect structure: \`j.giveEventRoles <userid>\``)
-        return;
+        // checkForChampions
+        case "j.checkForChampions":
+          checkForChampions(client, '1128424838692880464')
+          break
+
+        // checkForUnregisteredRoles
+        case "j.checkForUnregisteredRoles":
+          checkForUnregisteredRoles(client)
+          break
+
+        case 'j.role':
+          const roleToPosition = message.guild.roles.cache.get('838120897792442418');
+          if (!roleToPosition) return console.log('Роль не знайдена.');
+
+          // Створюємо нову роль
+          const newRole = await message.guild.roles.create({
+              name: 'test', // Назва ролі
+              color: '#fdab9f', // Колір ролі
+          });
+
+          // Переміщуємо нову роль вище заданої ролі
+          await newRole.setPosition(roleToPosition.position);
+          message.reply(`role <@&${newRole.id}> created`);
       }
-      let member
-      try{
+      // giveEventRoles
+      if( message.content.startsWith(`j.giveEventRoles `)){
+        let content = message.content
+        let parts = content.split(` `)
+        let userid = parts[1]
+  
+        if(parts.length != 2){
+          message.reply(`Wrong structure of command.\nCorrect structure: \`j.giveEventRoles <userid>\``)
+          return;
+        }
+        let member
         member = message.guild.members.cache.get(userid);  
-      }
-      catch(error){
+      
         message.reply(`Error with getting member object:\n${error}`)
-        return;
-      }
 
-      try{
         await Promise.all(eventRoles.map(roleId => member.roles.add(roleId)));
-      }
-      catch(error){
         message.reply(`Error with giving roles:\n${error}`)
-        return;
+  
+        message.reply(`Roles were given to <@${userid}> successfully.`)
       }
-
-      message.reply(`Roles were given to <@${userid}> successfully.`)
-    }
-    if(message.content === "j.events" && message.author.id == "163547278882111488"){
-      try{ await autoStartEvents(client) }
-      catch(error){ 
-        message.reply(`error: ${error}`) 
-        console.log(error)
-      }
-    }
-    if(message.content.startsWith(`j.changemyrole`) && message.author.id == "163547278882111488"){
-      try{
+      // changeMyRole
+    if(message.content.startsWith(`j.changemyrole `)){
         let content = message.content
         let parts = content.split(`--`)
         let newname = parts[1]
@@ -120,21 +115,20 @@ client.on('messageCreate', async(message) => {
         }
 
         message.reply(`Succesfully updated your role!`)
-      }
-      catch(error){
+      
         message.reply(`error: ${error}`)
       }
     }
   }
   catch(err){
     console.log(err)
+    message.reply(err)
   }
 })
 
 client.on('interactionCreate', async(interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
-  let guild = client.guilds.cache.get(process.env.guild_id);
   const commandsPath = './commands'
   // map of command names and whether bot needs to log command execution or not
   const commandsMap = new Map([
@@ -153,7 +147,8 @@ client.on('interactionCreate', async(interaction) => {
     ['clearcountinglist', false],
     ['eventgtapc', true],
     ['cleanracer', true],
-    ['eventban', true]
+    ['eventban', true],
+    ['createunbitem', false]
   ])
   
   if (commandsMap.has(interaction.commandName)){
@@ -162,7 +157,13 @@ client.on('interactionCreate', async(interaction) => {
     // if file of this command exists
     if(fs.existsSync(commandPath)){
       const command = require(commandsPath + `/${interaction.commandName}.js`);
-      command.execute(interaction, client, guild);
+
+      const startTime = Date.now();
+      await command.execute(interaction, client);
+      const endTime = Date.now();
+      const executionTime = endTime - startTime;
+      console.log(`Command "${interaction.commandName}" executed in ${executionTime}ms (${executionTime/1000}s)`);
+    
       // if command requires logging
       if(commandsMap.get(interaction.commandName) == true){
         logCommandExecution(client, interaction.commandName, interaction.user)

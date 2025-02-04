@@ -6,7 +6,7 @@ const { newsMessage } = require(newsMessagePath);
 require("dotenv/config");
 
 module.exports = {
-  async execute(interaction) {
+  async execute(interaction, client) {
     try {
       const newsChannelId = '795155910153469952';
       const messageId = interaction.options.getString('messageid');

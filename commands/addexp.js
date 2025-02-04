@@ -5,7 +5,7 @@ require("dotenv/config");
 let editMessageId = null;
 
 module.exports = {
-  async execute(interaction, client, guild) {
+  async execute(interaction, client) {
     try {
       await interaction.deferReply({ ephemeral: true });
 

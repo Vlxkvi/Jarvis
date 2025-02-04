@@ -4,7 +4,7 @@ const { successColor, failColor, midColor } = require("../oftenused.js")
 require("dotenv/config");
 
 module.exports = {
-  async execute(interaction) {
+  async execute(interaction, client) {
     try{
         const userOption = interaction.options.getUser('user')
         const user = interaction.guild.members.cache.get(userOption.id)

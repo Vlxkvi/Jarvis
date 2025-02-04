@@ -3,7 +3,7 @@ const { eventRoles, champions } = require("../oftenused.js")
 require("dotenv/config")
 
 module.exports = {
-      async execute(interaction, client, guild) {
+      async execute(interaction, client) {
       try{
         await interaction.deferReply({});
         const userOption1 = interaction.options.getUser('user1');

@@ -3,7 +3,7 @@ const fs = require('fs').promises;
 require("dotenv/config");
 
 module.exports = {
-  async execute(interaction, client, guild) {
+  async execute(interaction, client) {
     const usingTime = Math.floor(Date.now() / 1000);
     try {
       await interaction.deferReply({});
